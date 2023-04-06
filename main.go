@@ -26,7 +26,10 @@ func main() {
 	// Clear Screen
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
-	cmd.Run()
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal("Error: cmd.Run()", err)
+	}
 
 	config.EnvVarsFile = envVarsFile
 
@@ -60,7 +63,7 @@ func main() {
 	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
-		_ = <-signalChannel
+		<-signalChannel
 		fmt.Println("\nShutting down.")
 		os.Exit(0)
 	}()
@@ -76,7 +79,7 @@ func main() {
 
 		timeString := fmt.Sprintf("%f", currentStatExecutionTime)
 		workerCountString := fmt.Sprintf("%v", stat.Workers)
-		jobsCountString := fmt.Sprintf("%v", config.TotalJobs)
+		jobsCountString := fmt.Sprintf("%v", config.TotalJobCount)
 		speedIncrease := "(baseline)"
 
 		if i < len(workers.WorkerStats) && i > int(0) {
@@ -87,8 +90,6 @@ func main() {
 				// SLOWER
 				speedIncrease = fmt.Sprintf("-%vx", math.Round((baselineExecutionTime/currentStatExecutionTime)*100)/100)
 			}
-		} else {
-			//
 		}
 		table.Append([]string{workerCountString, jobsCountString, timeString, speedIncrease})
 

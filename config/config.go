@@ -3,6 +3,7 @@ package config
 import (
 	"embed"
 	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
@@ -10,10 +11,6 @@ import (
 )
 
 var WorkersAvailable = runtime.NumCPU()
-var TotalJobs = 16
-var StartingWorkerCount = 1
-var EndingWorkerCount = WorkersAvailable
-
 var EmptySleepJobSleepTimeMs = 1000
 
 var Debug = false
@@ -22,6 +19,10 @@ var ConsoleCyan = color.New(color.FgCyan)
 var ConsoleWhite = color.New(color.FgWhite)
 
 var EnvVarsFile embed.FS
+
+var StartingWorkerCount int
+var MaxWorkerCount int
+var TotalJobCount int
 
 // AppConfig returns a new decoded Config struct
 func AppConfig() (map[string]string, error) {
@@ -33,6 +34,30 @@ func AppConfig() (map[string]string, error) {
 	for _, line := range lines {
 		keyValuePair := strings.Split(line, "=")
 		envs[keyValuePair[0]] = keyValuePair[1]
+
+		if keyValuePair[0] == "STARTINGWORKERCOUNT" {
+			if keyValuePair[1] == "" {
+				StartingWorkerCount = 1
+			} else {
+				StartingWorkerCount, _ = strconv.Atoi(keyValuePair[1])
+			}
+		}
+
+		if keyValuePair[0] == "MAXWORKERCOUNT" {
+			if keyValuePair[1] == "" {
+				MaxWorkerCount = WorkersAvailable
+			} else {
+				MaxWorkerCount, _ = strconv.Atoi(keyValuePair[1])
+			}
+		}
+
+		if keyValuePair[0] == "TOTALJOBCOUNT" {
+			if keyValuePair[1] == "" {
+				TotalJobCount = WorkersAvailable * 2
+			} else {
+				TotalJobCount, _ = strconv.Atoi(keyValuePair[1])
+			}
+		}
 	}
 	return envs, nil
 }

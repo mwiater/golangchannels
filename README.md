@@ -4,13 +4,64 @@
 
 `go run .`
 
+Or: `make golang-run` Note: This builds and executes the binary, not equivalent to: `go run .`
+
+
+
 ## Build binary
 
-`go build -o ./bin/ .`
+`make golang-build` Outputs binary to `./bin/` directory.
 
 ## Run binary
 
 `./bin/golangchannels`
+
+Or: `make golang-run` Note: This builds and executes the binary, not equivalent to: `go run .`
+
+## Other convenience commands:
+
+List available commands: `make`
+
+```
+make golang-build
+make golang-lint
+make golang-run
+make golang-test
+```
+
+These make commands are simply executing bash scripts in the `./scripts/` directory. Take a look at those to see exactly what they are executing.
+
+### make golang-lint
+
+`make golang-lint` To lint the application.  **[golangci-lint](https://golangci-lint.run/usage/install/) must be installed**
+
+### make golang-test
+
+`make golang-test` To test the application using `gotestsum` **[gotestsum](https://github.com/gotestyourself/gotestsum#install) must be installed.**
+
+## .env
+
+The supplied .env file is blank by default, and should run properly without making changes:
+
+```
+STARTINGWORKERCOUNT=
+MAXWORKERCOUNT=
+TOTALJOBCOUNT=
+PPROF=
+PPROFIP=
+PPROFPORT=
+```
+
+The defaults are listed below when no values are set. To override any/all, just set the env vars below.
+
+
+**STARTINGWORKERCOUNT:** By default this will be set to `1`
+**MAXWORKERCOUNT:** By default this will be set to `runtime.NumCPU()`
+**TOTALJOBCOUNT:** By default this will be set to `runtime.NumCPU()*2`
+**PPROF:** By default this will be set to `false` and the pprof server will not start.
+**PPROFIP:** If PPROF is set to `true`, the app will try to figure out your local IP address. If it does not do this correctly, simply set your local IP Address here.
+**PPROFPORT:** By default this will be set to `6060`
+
 
 ## Pprof
 
