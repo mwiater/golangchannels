@@ -137,7 +137,6 @@ func Workers(workerCount int, jobCount int, jobName string) float64 {
 	col1 = fmt.Sprintf("Total time taken:%v", "")
 	colWidth = common.ConsoleColumnWidth(col1, 35)
 	config.ConsoleGreen.Printf("Total time taken: %-*s %f %s\n", colWidth, "", diff.Seconds(), "Seconds")
-
 	fmt.Println()
 	fmt.Println()
 
