@@ -1,3 +1,4 @@
+// Package workers is used to create workers that handle jobs
 package workers
 
 import (

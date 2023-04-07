@@ -29,3 +29,6 @@ golang-test:
 
 golang-lint:
 	scripts/golang_lint.sh
+
+golang-godoc:
+	scripts/golang_godoc.sh

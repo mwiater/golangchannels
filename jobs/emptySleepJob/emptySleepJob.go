@@ -1,3 +1,4 @@
+// Package emptySleepJob is used to mock a consistent job by sleeping for a period of time
 package emptySleepJob
 
 import (

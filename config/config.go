@@ -1,3 +1,4 @@
+// Package config implements .env file application configuration
 package config
 
 import (

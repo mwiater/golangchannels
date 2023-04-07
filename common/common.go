@@ -1,3 +1,4 @@
+// Package common implements shared application functions
 package common
 
 import (
@@ -5,6 +6,7 @@ import (
 	"strings"
 )
 
+// Get console column width of submitted string
 func ConsoleColumnWidth(text string, finalColWidth int) int {
 	return finalColWidth - len(text)
 }

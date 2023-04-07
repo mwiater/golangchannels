@@ -1,3 +1,4 @@
+// Package network is used to find network information in the local environment
 package network
 
 import (

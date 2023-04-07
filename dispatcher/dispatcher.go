@@ -1,3 +1,4 @@
+// Package dispatcher implements spawning and executing of workers
 package dispatcher
 
 import (
