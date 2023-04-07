@@ -1,43 +1,190 @@
 # Golang-Channels
 
-## Run
+**The Idea:** This project was born out of me trying to understand Golang channels and goroutine concurrency. Early hail Mary experiments failed show the benefits of of this pattern, so this is a bare bones benchmark and comparison written by eliminating as many variables as possible.
 
-`go run .`
+**The Initial Problem:** While my fundamental pattern was solid, the jobs that the workers were performing had too much variability and suffered from a lot of overhead from context switching, coordinating shared memory, and other processor-related overhead like synchronization. It was in writing this project that I was able to illustrate the fundamental nature of this pattern, as well as figure out why my initial attempts failed to show the benefits. **Just spawning more workers and goroutines will not necessarily benefit every type of processing job.** The overall takeaway for me what that sometimes the processor overhead created by running too many goroutines outweighs the performance increase.
 
-Or: `make golang-run` Note: This builds and executes the binary, not equivalent to: `go run .`
+**The Solution:** Separating out my code into distinct packages and narrowing the scope of the jobs performed (as well as making them consistent) was the key to seeing exactly how performant this pattern could be.
 
+**Overview:** Fundamentally, this project does a few things:
 
+1. Uses the pattern: `Dispatcher (spawns) -> Workers (process) -> Jobs`
+2. Uses `runtime.NumCPU()` to see how many processors are available, in turn, generating **one worker per CPU** (or core). In my environment, I have a total of **8** cores available in total.
+    1. By default the application will start with **1** worker to process the jobs and output the timing metrics.
+    2. Then it will add **one more worker** and process the **same exact batch of jobs**.
+    3. It will continue this process until it has reached the maximum number of CPUs as defined by `runtime.NumCPU()`. For my environment containing **8** CPUs, it will run **8** times, starting with **1** worker, adding another **single worker** with each iteration, and finally running the test with all **8** workers.
+    4. Each worker and job gets its own unique UUID in order to see which worker is processing which job in the results.
+3. The job being processed is just a 1 second `time.Sleep` function, so that there is very little variation in the time it takes a worker to execute it's number of jobs. By default, each worker runs twice as many jobs as the total number of workers, e.g.: `runtime.NumCPU() * 2`. This is a fairly arbitrary choice, but I felt that if this were a real world example, the workers would have more than a single queued job.
 
-## Build binary
+**EmptySleepJob():**
 
-`make golang-build` Outputs binary to `./bin/` directory.
-
-## Run binary
-
-`./bin/golangchannels`
-
-Or: `make golang-run` Note: This builds and executes the binary, not equivalent to: `go run .`
-
-## Other convenience commands:
-
-List available commands: `make`
+The important bit below (the "work") is: `time.Sleep(time.Duration(config.EmptySleepJobSleepTimeMs) * time.Millisecond)` The rest of the code is just Marshaling the timing data into a struct in order to collect the granular and overall timing of the job processing.
 
 ```
-make golang-build
-make golang-lint
-make golang-run
-make golang-test
+func (job Job) EmptySleepJob() (string, float64) {
+	jobStartTime := time.Now()
+
+	time.Sleep(time.Duration(config.EmptySleepJobSleepTimeMs) * time.Millisecond)
+
+	jobEndTime := time.Now()
+	jobElapsed := jobEndTime.Sub(jobStartTime)
+
+	jobResult := structs.SleepJobResult{}
+	jobResult.SleepTime = time.Duration(config.EmptySleepJobSleepTimeMs).String()
+	jobResult.Elapsed = jobElapsed.String()
+	jobResult.Status = strconv.FormatBool(true)
+
+	jobResultString, err := json.Marshal(jobResult)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return string(jobResultString), jobElapsed.Seconds()
+}
 ```
 
-These make commands are simply executing bash scripts in the `./scripts/` directory. Take a look at those to see exactly what they are executing.
+**Example EmptySleepJob() Results:**
 
-### make golang-lint
+The table below represents:
 
-`make golang-lint` To lint the application.  **[golangci-lint](https://golangci-lint.run/usage/install/) must be installed**
+* **1** to **8** workers running the `emptySleepJob()` function 16 times. Note: The output below **represents the final run with the maximum number of workers**. Runs with 1-7 workers were omitted for terseness. **The important part is the summary table of all 8 runs**.
+* Starting with **1** worker `(baseline)`, after each completion the worker count is increased by **1**, until `runtime.NumCPU()` number of workers (**8** CPUs in the example) is reached.
+* As each job is just a `time.Sleep(1 * time.Second)` command, each job should take about **1 second to execute.**
+* As expected, **1 worker completing 16 of these jobs takes about 16 seconds** and **8 workers runs approximately 8 times as fast.**
 
-### make golang-test
+```
+--------------------------------------
+|  Spawning workers for test 8 of 8  |
+--------------------------------------
 
-`make golang-test` To test the application using `gotestsum` **[gotestsum](https://github.com/gotestyourself/gotestsum#install) must be installed.**
+Workers: 8                           Job Name: emptySleepJob
+------------------------------------------------------------
+  Workers In Use:                    8
+  Workers Available:                 8
+  Workers Idle:                      0
+  Number of Jobs:                    16
+------------------------------------------------------------
+
+Allocating Worker #1:                4add73e2-da2b-4637-a4fb-51543d5509b4
+Allocating Worker #2:                6916721e-d3da-493e-bce8-71cd4eb3de10
+Allocating Worker #3:                32332fcb-64f7-43c7-8c3f-26e18648384e
+Allocating Worker #4:                d5be5f1c-2477-4d5d-8322-2ef428b0f535
+Allocating Worker #5:                41f951d9-a878-4f5e-9265-9924ec2f815a
+Allocating Worker #6:                81e7fd26-7e5b-45f7-811c-7d356f140593
+Allocating Worker #7:                d21cdd06-f55e-4e3f-9c01-ed79fe543711
+Allocating Worker #8:                da2e47c2-a7bf-428f-b029-2c4ea51422d4
+  Allocating Job #1:                 8c183aa8-5b10-49aa-b1cd-9dfa0b1db194
+  Allocating Job #2:                 697b8947-0273-46a3-bf42-0995b2daed30
+  Allocating Job #3:                 f2df6e2a-3f85-4b27-b7cd-b4aa1f6883b8
+  Allocating Job #4:                 919f3133-50d8-4152-bf59-92cc7eca50b4
+  JOB 2/16 STARTED:                  697b8947-0273-46a3-bf42-0995b2daed30 with Worker: 6916721e-d3da-493e-bce8-71cd4eb3de10
+  JOB 3/16 STARTED:                  f2df6e2a-3f85-4b27-b7cd-b4aa1f6883b8 with Worker: 32332fcb-64f7-43c7-8c3f-26e18648384e
+  JOB 4/16 STARTED:                  919f3133-50d8-4152-bf59-92cc7eca50b4 with Worker: da2e47c2-a7bf-428f-b029-2c4ea51422d4
+  JOB 1/16 STARTED:                  8c183aa8-5b10-49aa-b1cd-9dfa0b1db194 with Worker: 4add73e2-da2b-4637-a4fb-51543d5509b4
+  Allocating Job #5:                 e388ad83-4ba2-454d-925d-db40988fd161
+  Allocating Job #6:                 0eda2855-7f5b-4f61-82fd-161e809892ec
+  Allocating Job #7:                 c8d8bd76-f463-4968-bdda-3113b06adca0
+  Allocating Job #8:                 78fa697a-42e6-45b8-80b2-c4a7415b8cc4
+  Allocating Job #9:                 b9220f71-dab5-4329-b1c6-5f49a117d616
+  Allocating Job #10:                ee86c5d7-8ff2-4c76-8dbd-78ad66d5aa1a
+  Allocating Job #11:                c2336100-de1f-4433-b82d-683f48861e64
+  Allocating Job #12:                765de944-9ec6-4b50-af3a-b3decd81e967
+  Allocating Job #13:                f581ddd6-aec2-423f-be13-9c6bc0fddeaa
+  Allocating Job #14:                0684858e-9d93-42fd-a203-f4b73c40dfab
+  Allocating Job #15:                e8740614-c7cf-41b1-b946-6077ba5b8a20
+  Allocating Job #16:                a782c1e8-6569-47bf-99c0-15de8846ed30
+  JOB 6/16 STARTED:                  0eda2855-7f5b-4f61-82fd-161e809892ec with Worker: d5be5f1c-2477-4d5d-8322-2ef428b0f535
+  JOB 5/16 STARTED:                  e388ad83-4ba2-454d-925d-db40988fd161 with Worker: 41f951d9-a878-4f5e-9265-9924ec2f815a
+  JOB 8/16 STARTED:                  78fa697a-42e6-45b8-80b2-c4a7415b8cc4 with Worker: 81e7fd26-7e5b-45f7-811c-7d356f140593
+  JOB 7/16 STARTED:                  c8d8bd76-f463-4968-bdda-3113b06adca0 with Worker: d21cdd06-f55e-4e3f-9c01-ed79fe543711
+  JOB 9/16 STARTED:                  b9220f71-dab5-4329-b1c6-5f49a117d616 with Worker: 4add73e2-da2b-4637-a4fb-51543d5509b4
+  JOB 10/16 STARTED:                 ee86c5d7-8ff2-4c76-8dbd-78ad66d5aa1a with Worker: d21cdd06-f55e-4e3f-9c01-ed79fe543711
+  JOB 13/16 STARTED:                 f581ddd6-aec2-423f-be13-9c6bc0fddeaa with Worker: da2e47c2-a7bf-428f-b029-2c4ea51422d4
+    -> JOB 1/16 COMPLETED:           8c183aa8-5b10-49aa-b1cd-9dfa0b1db194 with Worker: 4add73e2-da2b-4637-a4fb-51543d5509b4 (Ran emptySleepJob in 1.000478511 Seconds)
+  JOB 14/16 STARTED:                 0684858e-9d93-42fd-a203-f4b73c40dfab with Worker: 81e7fd26-7e5b-45f7-811c-7d356f140593
+  JOB 11/16 STARTED:                 c2336100-de1f-4433-b82d-683f48861e64 with Worker: 6916721e-d3da-493e-bce8-71cd4eb3de10
+    -> JOB 7/16 COMPLETED:           c8d8bd76-f463-4968-bdda-3113b06adca0 with Worker: d21cdd06-f55e-4e3f-9c01-ed79fe543711 (Ran emptySleepJob in 1.000410017 Seconds)
+  JOB 16/16 STARTED:                 a782c1e8-6569-47bf-99c0-15de8846ed30 with Worker: d5be5f1c-2477-4d5d-8322-2ef428b0f535
+  JOB 15/16 STARTED:                 e8740614-c7cf-41b1-b946-6077ba5b8a20 with Worker: 41f951d9-a878-4f5e-9265-9924ec2f815a
+    -> JOB 2/16 COMPLETED:           697b8947-0273-46a3-bf42-0995b2daed30 with Worker: 6916721e-d3da-493e-bce8-71cd4eb3de10 (Ran emptySleepJob in 1.000579614 Seconds)
+    -> JOB 3/16 COMPLETED:           f2df6e2a-3f85-4b27-b7cd-b4aa1f6883b8 with Worker: 32332fcb-64f7-43c7-8c3f-26e18648384e (Ran emptySleepJob in 1.000560273 Seconds)
+    -> JOB 4/16 COMPLETED:           919f3133-50d8-4152-bf59-92cc7eca50b4 with Worker: da2e47c2-a7bf-428f-b029-2c4ea51422d4 (Ran emptySleepJob in 1.000556052 Seconds)
+    -> JOB 8/16 COMPLETED:           78fa697a-42e6-45b8-80b2-c4a7415b8cc4 with Worker: 81e7fd26-7e5b-45f7-811c-7d356f140593 (Ran emptySleepJob in 1.000437111 Seconds)
+    -> JOB 5/16 COMPLETED:           e388ad83-4ba2-454d-925d-db40988fd161 with Worker: 41f951d9-a878-4f5e-9265-9924ec2f815a (Ran emptySleepJob in 1.000455047 Seconds)
+    -> JOB 6/16 COMPLETED:           0eda2855-7f5b-4f61-82fd-161e809892ec with Worker: d5be5f1c-2477-4d5d-8322-2ef428b0f535 (Ran emptySleepJob in 1.000459854 Seconds)
+  JOB 12/16 STARTED:                 765de944-9ec6-4b50-af3a-b3decd81e967 with Worker: 32332fcb-64f7-43c7-8c3f-26e18648384e
+    -> JOB 11/16 COMPLETED:          c2336100-de1f-4433-b82d-683f48861e64 with Worker: 6916721e-d3da-493e-bce8-71cd4eb3de10 (Ran emptySleepJob in 1.001107541 Seconds)
+    -> JOB 13/16 COMPLETED:          f581ddd6-aec2-423f-be13-9c6bc0fddeaa with Worker: da2e47c2-a7bf-428f-b029-2c4ea51422d4 (Ran emptySleepJob in 1.001115304 Seconds)
+    -> JOB 15/16 COMPLETED:          e8740614-c7cf-41b1-b946-6077ba5b8a20 with Worker: 41f951d9-a878-4f5e-9265-9924ec2f815a (Ran emptySleepJob in 1.001170553 Seconds)
+    -> JOB 16/16 COMPLETED:          a782c1e8-6569-47bf-99c0-15de8846ed30 with Worker: d5be5f1c-2477-4d5d-8322-2ef428b0f535 (Ran emptySleepJob in 1.001130361 Seconds)
+    -> JOB 12/16 COMPLETED:          765de944-9ec6-4b50-af3a-b3decd81e967 with Worker: 32332fcb-64f7-43c7-8c3f-26e18648384e (Ran emptySleepJob in 1.00112921 Seconds)
+    -> JOB 9/16 COMPLETED:           b9220f71-dab5-4329-b1c6-5f49a117d616 with Worker: 4add73e2-da2b-4637-a4fb-51543d5509b4 (Ran emptySleepJob in 1.001230054 Seconds)
+    -> JOB 14/16 COMPLETED:          0684858e-9d93-42fd-a203-f4b73c40dfab with Worker: 81e7fd26-7e5b-45f7-811c-7d356f140593 (Ran emptySleepJob in 1.001195592 Seconds)
+    -> JOB 10/16 COMPLETED:          ee86c5d7-8ff2-4c76-8dbd-78ad66d5aa1a with Worker: d21cdd06-f55e-4e3f-9c01-ed79fe543711 (Ran emptySleepJob in 1.001210098 Seconds)
+
+------------------------------------------------------
+Total time taken:                    2.002621 Seconds
+
++-------------------+----------------+----------------+----------------+
+| NUMBER OF WORKERS | NUMBER OF JOBS | EXECUTION TIME | SPEED INCREASE |
++-------------------+----------------+----------------+----------------+
+|                 1 |             16 |      16.125234 | (baseline)     |
+|                 2 |             16 |       8.045123 | +2x            |
+|                 3 |             16 |       6.035669 | +2.67x         |
+|                 4 |             16 |       4.003083 | +4.03x         |
+|                 5 |             16 |       4.008031 | +4.02x         |
+|                 6 |             16 |       3.015694 | +5.35x         |
+|                 7 |             16 |       3.014996 | +5.35x         |
+|                 8 |             16 |       2.002621 | +8.05x         |
++-------------------+----------------+----------------+----------------+
+```
+
+**Overloading EmptySleepJob() Results:**
+
+In the above example, when limiting the maximum number or workers to `runtime.NumCPU()`, the application processing speed increases as expected. But what if we pass this limit?
+
+Below are the results for running 32 workers, or `runtime.NumCPU() * 4`:
+
+```
++-------------------+----------------+----------------+----------------+
+| NUMBER OF WORKERS | NUMBER OF JOBS | EXECUTION TIME | SPEED INCREASE |
++-------------------+----------------+----------------+----------------+
+|                 1 |             16 |      16.030430 | (baseline)     |
+|                 2 |             16 |       8.019319 | +2x            |
+|                 3 |             16 |       6.034474 | +2.66x         |
+|                 4 |             16 |       4.007691 | +4x            |
+|                 5 |             16 |       4.028187 | +3.98x         |
+|                 6 |             16 |       3.009318 | +5.33x         |
+|                 7 |             16 |       3.023195 | +5.3x          |
+|                 8 |             16 |       2.042858 | +7.85x         |
+|                 9 |             16 |       2.032193 | +7.89x         |
+|                10 |             16 |       2.017141 | +7.95x         |
+|                11 |             16 |       2.019986 | +7.94x         |
+|                12 |             16 |       2.005618 | +7.99x         |
+|                13 |             16 |       2.008364 | +7.98x         |
+|                14 |             16 |       2.003370 | +8x            |
+|                15 |             16 |       2.007190 | +7.99x         |
+|                16 |             16 |       1.014751 | +15.8x         |
+|                17 |             16 |       1.002632 | +15.99x        |
+|                18 |             16 |       1.003825 | +15.97x        |
+|                19 |             16 |       1.001292 | +16.01x        |
+|                20 |             16 |       1.000506 | +16.02x        |
+|                21 |             16 |       1.000729 | +16.02x        |
+|                22 |             16 |       1.019471 | +15.72x        |
+|                23 |             16 |       1.020171 | +15.71x        |
+|                24 |             16 |       1.010650 | +15.86x        |
+|                25 |             16 |       1.002440 | +15.99x        |
+|                26 |             16 |       1.002254 | +15.99x        |
+|                27 |             16 |       1.001130 | +16.01x        |
+|                28 |             16 |       1.001569 | +16.01x        |
+|                29 |             16 |       1.006593 | +15.93x        |
+|                30 |             16 |       1.003033 | +15.98x        |
+|                31 |             16 |       1.001035 | +16.01x        |
+|                32 |             16 |       1.001349 | +16.01x        |
++-------------------+----------------+----------------+----------------+
+
+```
+
 
 ## .env
 
@@ -52,8 +199,7 @@ PPROFIP=
 PPROFPORT=
 ```
 
-The defaults are listed below when no values are set. To override any/all, just set the env vars below.
-
+The defaults are listed below when no values are set. **To override any/all, just set the env vars below.**
 
 **STARTINGWORKERCOUNT:** By default this will be set to `1`
 **MAXWORKERCOUNT:** By default this will be set to `runtime.NumCPU()`
@@ -63,7 +209,47 @@ The defaults are listed below when no values are set. To override any/all, just 
 **PPROFPORT:** By default this will be set to `6060`
 
 
-## Pprof
+## Running the application
+
+`go run .`
+
+Or: `make golang-run` Note: This builds and executes the binary, not equivalent to: `go run .`
+
+## Building the application binary
+
+`make golang-build` Outputs binary to `./bin/` directory.
+
+## Running the application binary
+
+`./bin/golangchannels`
+
+Or: `make golang-run` Note: This builds and executes the binary, not equivalent to: `go run .`
+
+## Other convenience commands:
+
+List available commands: `make`
+
+```
+Targets in this Makefile:
+
+make golang-build
+make golang-godoc
+make golang-lint
+make golang-run
+make golang-test
+
+For details on these commands, see the bash scripts in the 'scripts/' directory.
+```
+
+### make golang-lint
+
+`make golang-lint` To lint the application.  **[golangci-lint](https://golangci-lint.run/usage/install/) must be installed**
+
+### make golang-test
+
+`make golang-test` To test the application using `gotestsum` **[gotestsum](https://github.com/gotestyourself/gotestsum#install) must be installed.**
+
+### Pprof
 
 Run app.
 
@@ -72,96 +258,3 @@ In another terminal, use `pprof`, e.g.:
 `go tool pprof http://192.168.0.99:6060/debug/pprof/profile?seconds=20`
 `go tool pprof http://192.168.0.99:6060/debug/pprof/heap`
 `go tool pprof http://192.168.0.99:6060/debug/pprof/goroutine`
-
-## Results: emptySleepJob()
-
-The table below represents:
-
-* 1 to 8 workers running the `emptySleepJob()` function 16 times.
-* Starting with 1 worker `(baseline)`, after each completion the worker count is increased by 1, until `runtime.NumCPU()` number of workers (8 CPUs in the example) is reached.
-* As each job is just a `time.Sleep(1 * time.Second)` command, each job should take about **1 second to execute.**
-* As expected, **1 worker completing 16 of these jobs takes about 16 seconds and 8 workers runs approximately 8 times as fast.**
-
-```
-Workers: 8:                          Job Name: emptySleepJob
---------------------------------------------------
-  Workers In Use:                    8
-  Workers Available:                 8
-  Workers Idle:                      0
-  Number of Jobs:                    16
---------------------------------------------------
-
-Allocating Worker #1:                3d0dc960-9b9f-4588-9f4d-a5dbd071a19b
-Allocating Worker #2:                6e524eb4-98f8-40df-b2e3-73a11615f4af
-Allocating Worker #3:                12b5d356-c821-49b8-9c24-4eb2d44b948f
-Allocating Worker #4:                372297a4-698b-42a5-ab85-e314b26b6c1c
-Allocating Worker #5:                cd10b31d-be55-4390-87bf-20771318ea15
-  Allocating Job #1:                 3489c34a-11a5-4b67-a5a2-d9381f694b5a
-  Allocating Job #2:                 a68a348b-f4a6-47c3-bc2b-a3f8f132caa7
-  Allocating Job #3:                 b77ca730-0343-4bf4-b4bd-2208c939bc6c
-  Allocating Job #4:                 fd394b48-4bb4-481a-abe3-f2ae220519c5
-  Allocating Job #5:                 ae9affc5-d518-4df3-9620-b8a5c75b922a
-  JOB 1/16 STARTED:                  3489c34a-11a5-4b67-a5a2-d9381f694b5a with Worker: 6e524eb4-98f8-40df-b2e3-73a11615f4af
-  JOB 4/16 STARTED:                  fd394b48-4bb4-481a-abe3-f2ae220519c5 with Worker: 12b5d356-c821-49b8-9c24-4eb2d44b948f
-  Allocating Job #6:                 58bed1af-3a8f-4f80-b097-e6fd86b99990
-  JOB 2/16 STARTED:                  a68a348b-f4a6-47c3-bc2b-a3f8f132caa7 with Worker: cd10b31d-be55-4390-87bf-20771318ea15
-Allocating Worker #6:                1484cac6-7404-477a-9c34-f84a38b5d92f
-Allocating Worker #7:                a5250688-d975-4874-ac73-b8a56c655274
-  JOB 5/16 STARTED:                  ae9affc5-d518-4df3-9620-b8a5c75b922a with Worker: 372297a4-698b-42a5-ab85-e314b26b6c1c
-  JOB 3/16 STARTED:                  b77ca730-0343-4bf4-b4bd-2208c939bc6c with Worker: 3d0dc960-9b9f-4588-9f4d-a5dbd071a19b
-Allocating Worker #8:                4614814b-64b9-4829-befb-cb29fabbab1d
-  Allocating Job #7:                 fede5656-5d42-4322-9933-4e1bad722d70
-  Allocating Job #8:                 178d5d5a-e9d4-4eaa-9759-50c91efc8455
-  Allocating Job #9:                 5ff567a9-66b0-4b2e-acc5-79e188e911a0
-  Allocating Job #10:                47f426a7-8050-4650-b588-b8ed3d884807
-  Allocating Job #11:                4d58289e-85cd-4c1a-a95e-4fedb8e78fef
-  Allocating Job #12:                d9db676b-a972-410d-a9bb-5d5fd4cdbbcf
-  Allocating Job #13:                51329299-adb0-4a96-8184-c010a4b47b10
-  Allocating Job #14:                2b7b2d2e-190a-43d9-b684-a416f28a8944
-  Allocating Job #15:                c40075e9-83c4-48c4-a105-b8f572062354
-  Allocating Job #16:                2d002fc9-b2b9-43dd-9958-a2f6e9db4486
-  JOB 8/16 STARTED:                  178d5d5a-e9d4-4eaa-9759-50c91efc8455 with Worker: 4614814b-64b9-4829-befb-cb29fabbab1d
-  JOB 6/16 STARTED:                  58bed1af-3a8f-4f80-b097-e6fd86b99990 with Worker: 1484cac6-7404-477a-9c34-f84a38b5d92f
-  JOB 7/16 STARTED:                  fede5656-5d42-4322-9933-4e1bad722d70 with Worker: a5250688-d975-4874-ac73-b8a56c655274
-  JOB 9/16 STARTED:                  5ff567a9-66b0-4b2e-acc5-79e188e911a0 with Worker: a5250688-d975-4874-ac73-b8a56c655274
-  JOB 10/16 STARTED:                 47f426a7-8050-4650-b588-b8ed3d884807 with Worker: 372297a4-698b-42a5-ab85-e314b26b6c1c
-  JOB 11/16 STARTED:                 4d58289e-85cd-4c1a-a95e-4fedb8e78fef with Worker: 6e524eb4-98f8-40df-b2e3-73a11615f4af
-  JOB 12/16 STARTED:                 d9db676b-a972-410d-a9bb-5d5fd4cdbbcf with Worker: 12b5d356-c821-49b8-9c24-4eb2d44b948f
-    -> JOB 7/16 COMPLETED:           fede5656-5d42-4322-9933-4e1bad722d70 with Worker: a5250688-d975-4874-ac73-b8a56c655274 (Ran emptySleepJob in 1.003224526 Seconds)
-  JOB 13/16 STARTED:                 51329299-adb0-4a96-8184-c010a4b47b10 with Worker: 4614814b-64b9-4829-befb-cb29fabbab1d
-  JOB 15/16 STARTED:                 c40075e9-83c4-48c4-a105-b8f572062354 with Worker: 3d0dc960-9b9f-4588-9f4d-a5dbd071a19b
-    -> JOB 5/16 COMPLETED:           ae9affc5-d518-4df3-9620-b8a5c75b922a with Worker: 372297a4-698b-42a5-ab85-e314b26b6c1c (Ran emptySleepJob in 1.003378164 Seconds)
-  JOB 16/16 STARTED:                 2d002fc9-b2b9-43dd-9958-a2f6e9db4486 with Worker: cd10b31d-be55-4390-87bf-20771318ea15
-    -> JOB 1/16 COMPLETED:           3489c34a-11a5-4b67-a5a2-d9381f694b5a with Worker: 6e524eb4-98f8-40df-b2e3-73a11615f4af (Ran emptySleepJob in 1.003463188 Seconds)
-    -> JOB 4/16 COMPLETED:           fd394b48-4bb4-481a-abe3-f2ae220519c5 with Worker: 12b5d356-c821-49b8-9c24-4eb2d44b948f (Ran emptySleepJob in 1.003456132 Seconds)
-    -> JOB 8/16 COMPLETED:           178d5d5a-e9d4-4eaa-9759-50c91efc8455 with Worker: 4614814b-64b9-4829-befb-cb29fabbab1d (Ran emptySleepJob in 1.003353988 Seconds)
-    -> JOB 6/16 COMPLETED:           58bed1af-3a8f-4f80-b097-e6fd86b99990 with Worker: 1484cac6-7404-477a-9c34-f84a38b5d92f (Ran emptySleepJob in 1.003334243 Seconds)
-    -> JOB 3/16 COMPLETED:           b77ca730-0343-4bf4-b4bd-2208c939bc6c with Worker: 3d0dc960-9b9f-4588-9f4d-a5dbd071a19b (Ran emptySleepJob in 1.003453667 Seconds)
-    -> JOB 2/16 COMPLETED:           a68a348b-f4a6-47c3-bc2b-a3f8f132caa7 with Worker: cd10b31d-be55-4390-87bf-20771318ea15 (Ran emptySleepJob in 1.003505038 Seconds)
-  JOB 14/16 STARTED:                 2b7b2d2e-190a-43d9-b684-a416f28a8944 with Worker: 1484cac6-7404-477a-9c34-f84a38b5d92f
-    -> JOB 14/16 COMPLETED:          2b7b2d2e-190a-43d9-b684-a416f28a8944 with Worker: 1484cac6-7404-477a-9c34-f84a38b5d92f (Ran emptySleepJob in 1.001892706 Seconds)
-    -> JOB 9/16 COMPLETED:           5ff567a9-66b0-4b2e-acc5-79e188e911a0 with Worker: a5250688-d975-4874-ac73-b8a56c655274 (Ran emptySleepJob in 1.002065712 Seconds)
-    -> JOB 11/16 COMPLETED:          4d58289e-85cd-4c1a-a95e-4fedb8e78fef with Worker: 6e524eb4-98f8-40df-b2e3-73a11615f4af (Ran emptySleepJob in 1.002081539 Seconds)
-    -> JOB 10/16 COMPLETED:          47f426a7-8050-4650-b588-b8ed3d884807 with Worker: 372297a4-698b-42a5-ab85-e314b26b6c1c (Ran emptySleepJob in 1.002088789 Seconds)
-    -> JOB 12/16 COMPLETED:          d9db676b-a972-410d-a9bb-5d5fd4cdbbcf with Worker: 12b5d356-c821-49b8-9c24-4eb2d44b948f (Ran emptySleepJob in 1.002080951 Seconds)
-    -> JOB 16/16 COMPLETED:          2d002fc9-b2b9-43dd-9958-a2f6e9db4486 with Worker: cd10b31d-be55-4390-87bf-20771318ea15 (Ran emptySleepJob in 1.002007645 Seconds)
-    -> JOB 15/16 COMPLETED:          c40075e9-83c4-48c4-a105-b8f572062354 with Worker: 3d0dc960-9b9f-4588-9f4d-a5dbd071a19b (Ran emptySleepJob in 1.00203514 Seconds)
-    -> JOB 13/16 COMPLETED:          51329299-adb0-4a96-8184-c010a4b47b10 with Worker: 4614814b-64b9-4829-befb-cb29fabbab1d (Ran emptySleepJob in 1.002061802 Seconds)
-
---------------------------------------------------
-Total time taken:2.005891           Seconds
-
-
-+-------------------+----------------+----------------+----------------+
-| NUMBER OF WORKERS | NUMBER OF JOBS | EXECUTION TIME | SPEED INCREASE |
-+-------------------+----------------+----------------+----------------+
-|                 1 |             16 |      16.064956 | (baseline)     |
-|                 2 |             16 |       8.054211 | +1.99x         |
-|                 3 |             16 |       6.008089 | +2.67x         |
-|                 4 |             16 |       4.012115 | +4x            |
-|                 5 |             16 |       4.007524 | +4.01x         |
-|                 6 |             16 |       3.021437 | +5.32x         |
-|                 7 |             16 |       3.021649 | +5.32x         |
-|                 8 |             16 |       2.005891 | +8.01x         |
-+-------------------+----------------+----------------+----------------+
-```
