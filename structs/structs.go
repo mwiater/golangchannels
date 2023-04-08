@@ -8,6 +8,7 @@ type Job struct {
 	JobNumber int
 	Id        uuid.UUID
 	JobName   string
+	Data      string
 }
 
 type JobResult struct {
@@ -17,11 +18,13 @@ type JobResult struct {
 	JobTimer     float64
 	JobName      string
 	Status       string
+	Data         string
 }
 
 type WorkerStat struct {
 	Workers       int
 	ExecutionTime float64
+	Data          string
 }
 
 type WeaselsJobResult struct {
@@ -30,10 +33,12 @@ type WeaselsJobResult struct {
 	Generations string
 	Status      string
 	Elapsed     string
+	Data        string
 }
 
 type SleepJobResult struct {
 	SleepTime string
 	Elapsed   string
 	Status    string
+	Data      string
 }

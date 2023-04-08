@@ -288,6 +288,14 @@ Run app.
 
 In another terminal, use `pprof`, e.g.:
 
-`go tool pprof http://192.168.0.99:6060/debug/pprof/profile?seconds=20`
+`go tool pprof http://192.168.0.99:6060/debug/pprof/profile?seconds=5`
 `go tool pprof http://192.168.0.99:6060/debug/pprof/heap`
 `go tool pprof http://192.168.0.99:6060/debug/pprof/goroutine`
+`go tool pprof http://192.168.0.99:6060/debug/pprof/block`
+`go tool pprof http://192.168.0.99:6060/debug/pprof/threadcreate`
+`go tool pprof http://192.168.0.99:6060/debug/pprof/mutex`
+
+
+go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_1.png
+go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_8.png
+go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_16.png
