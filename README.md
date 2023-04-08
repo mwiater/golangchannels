@@ -299,3 +299,20 @@ In another terminal, use `pprof`, e.g.:
 go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_1.png
 go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_8.png
 go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_16.png
+
+
+go tool pprof -png http://192.168.129.52:6060/debug/pprof/heap > heap_16.png
+
+
+curl -sK -v http://192.168.129.52:6060/debug/pprof/heap > heap.out
+go tool pprof heap.out
+
+
+curl -sK -v http://192.168.129.52:6060/debug/pprof/goroutine > goroutines-1.out
+clear && go tool pprof goroutines-1.out
+
+curl -sK -v http://192.168.129.52:6060/debug/pprof/goroutine > goroutines-4.out
+clear && go tool pprof goroutines-4.out
+
+curl -sK -v http://192.168.129.52:6060/debug/pprof/goroutine > goroutines-16.out
+clear && go tool pprof goroutines-16.out

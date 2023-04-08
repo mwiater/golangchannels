@@ -36,7 +36,7 @@ func (job Job) PiJob() (string, float64) {
 	jobResult.SleepTime = time.Duration(config.EmptySleepJobSleepTimeMs).String()
 	jobResult.Elapsed = jobElapsed.String()
 	jobResult.Status = strconv.FormatBool(true)
-	jobResult.Data = PI
+	jobResult.Data = PI.String()
 
 	jobResultString, err := json.Marshal(jobResult)
 	if err != nil {
