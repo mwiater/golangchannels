@@ -9,21 +9,22 @@ import (
 	"github.com/mattwiater/golangchannels/workers"
 )
 
-func Run() {
+func Run(startingWorkerCount int, maxWorkerCount int, totalJobCount int) {
 	testCount := 1
-	for i := config.StartingWorkerCount; i <= config.MaxWorkerCount; i++ {
+	for i := startingWorkerCount; i <= maxWorkerCount; i++ {
 		currentWorkers := i
 
-		text := fmt.Sprintf("|  Spawning workers for test %v of %v  |", testCount, (config.MaxWorkerCount - config.StartingWorkerCount + 1))
-		divider := strings.Repeat("-", len(text))
+		if config.Debug {
+			text := fmt.Sprintf("|  Spawning workers for test %v of %v  |", testCount, (maxWorkerCount - startingWorkerCount + 1))
+			divider := strings.Repeat("-", len(text))
+			fmt.Println()
+			config.ConsoleCyan.Println(divider)
+			config.ConsoleCyan.Printf("|  Spawning workers for test %v of %v  |\n", testCount, (maxWorkerCount - startingWorkerCount + 1))
+			config.ConsoleCyan.Println(divider)
+			fmt.Println()
+		}
 
-		fmt.Println()
-		config.ConsoleCyan.Println(divider)
-		config.ConsoleCyan.Printf("|  Spawning workers for test %v of %v  |\n", testCount, (config.MaxWorkerCount - config.StartingWorkerCount + 1))
-		config.ConsoleCyan.Println(divider)
-		fmt.Println()
-
-		elapsed := workers.Workers(currentWorkers, config.TotalJobCount, "emptySleepJob")
+		elapsed := workers.Workers(currentWorkers, totalJobCount, "emptySleepJob")
 		workers.WorkerStats = append(workers.WorkerStats, workers.WorkerStat{Workers: currentWorkers, ExecutionTime: elapsed})
 
 		testCount++

@@ -14,13 +14,13 @@ import (
 var WorkersAvailable = runtime.NumCPU()
 var EmptySleepJobSleepTimeMs = 1000
 
-var Debug = false
 var ConsoleGreen = color.New(color.FgGreen)
 var ConsoleCyan = color.New(color.FgCyan)
 var ConsoleWhite = color.New(color.FgWhite)
 
 var EnvVarsFile embed.FS
 
+var Debug bool
 var StartingWorkerCount int
 var MaxWorkerCount int
 var TotalJobCount int
@@ -33,6 +33,14 @@ func AppConfig() (map[string]string, error) {
 	for _, line := range lines {
 		keyValuePair := strings.Split(line, "=")
 		envs[keyValuePair[0]] = keyValuePair[1]
+
+		if keyValuePair[0] == "DEBUG" {
+			if keyValuePair[1] == "" {
+				Debug = true
+			} else {
+				Debug, _ = strconv.ParseBool(keyValuePair[1])
+			}
+		}
 
 		if keyValuePair[0] == "STARTINGWORKERCOUNT" {
 			if keyValuePair[1] == "" {

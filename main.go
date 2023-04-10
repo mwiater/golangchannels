@@ -69,10 +69,12 @@ func main() {
 		os.Exit(0)
 	}()
 
-	//defer profile.Start(profile.MemProfile, profile.ProfilePath("./pprof/1")).Stop()
-	defer profile.Start(profile.CPUProfile, profile.ProfilePath("./pprof/16")).Stop()
+	if cfg["PPROF"] == "true" {
+		//defer profile.Start(profile.MemProfile, profile.ProfilePath("./pprof/1")).Stop()
+		defer profile.Start(profile.CPUProfile, profile.ProfilePath("./pprof/16")).Stop()
+	}
 
-	dispatcher.Run()
+	dispatcher.Run(config.StartingWorkerCount, config.MaxWorkerCount, config.TotalJobCount)
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Number of Workers", "Number of Jobs", "Execution Time", "Speed Increase"})
@@ -96,7 +98,9 @@ func main() {
 			}
 		}
 		table.Append([]string{workerCountString, jobsCountString, timeString, speedIncrease})
-
 	}
-	table.Render()
+
+	if config.Debug {
+		table.Render()
+	}
 }

@@ -34,9 +34,12 @@ func WorkerResult(done chan bool) {
 
 		jobData = append(jobData, jobResult)
 
-		col1 := fmt.Sprintf("    -> JOB %v/%v COMPLETED:", jobResult.Job.JobNumber, jobResult.NumberOfJobs)
-		colWidth := common.ConsoleColumnWidth(col1, 35)
-		config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %v Seconds)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.Job.Id, jobResult.WorkerID, jobResult.JobName, jobResult.JobTimer)
+		if config.Debug {
+			col1 := fmt.Sprintf("    -> JOB %v/%v COMPLETED:", jobResult.Job.JobNumber, jobResult.NumberOfJobs)
+			colWidth := common.ConsoleColumnWidth(col1, 35)
+			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %v Seconds)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.Job.Id, jobResult.WorkerID, jobResult.JobName, jobResult.JobTimer)
+		}
+
 	}
 	done <- true
 }
@@ -53,9 +56,12 @@ func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
 	for i := 0; i < noOfWorkers; i++ {
 		wg.Add(1)
 		uuid := uuid.New()
-		col1 := fmt.Sprintf("Allocating Worker #%v:", i+1)
-		colWidth := common.ConsoleColumnWidth(col1, 35)
-		config.ConsoleGreen.Printf("Allocating Worker #%d: %-*s %v\n", i+1, colWidth, "", uuid)
+
+		if config.Debug {
+			col1 := fmt.Sprintf("Allocating Worker #%v:", i+1)
+			colWidth := common.ConsoleColumnWidth(col1, 35)
+			config.ConsoleGreen.Printf("Allocating Worker #%d: %-*s %v\n", i+1, colWidth, "", uuid)
+		}
 
 		go Worker(&wg, uuid, noOfJobs)
 	}
@@ -72,9 +78,13 @@ func AllocateJob(noOfJobs int) {
 	for i := 0; i < noOfJobs; i++ {
 		uuid := uuid.New()
 		JobNumber := i + 1
-		col1 := fmt.Sprintf("  Allocating Job #%d:", JobNumber)
-		colWidth := common.ConsoleColumnWidth(col1, 35)
-		config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuid)
+
+		if config.Debug {
+			col1 := fmt.Sprintf("  Allocating Job #%d:", JobNumber)
+			colWidth := common.ConsoleColumnWidth(col1, 35)
+			config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuid)
+		}
+
 		job := Job{JobNumber: JobNumber, Id: uuid, JobName: "emptySleepJob"}
 		jobs <- job
 	}
@@ -92,32 +102,34 @@ func Workers(workerCount int, jobCount int, jobName string) float64 {
 	startTime := time.Now()
 	numberOfJobs := jobCount
 
-	col1 := fmt.Sprintf("Workers: %d", workerCount)
-	colWidth := common.ConsoleColumnWidth(col1, 35)
-	config.ConsoleWhite.Printf("Workers: %d %-*s Job Name: %s\n", workerCount, colWidth, "", jobName)
+	if config.Debug {
+		col1 := fmt.Sprintf("Workers: %d", workerCount)
+		colWidth := common.ConsoleColumnWidth(col1, 35)
+		config.ConsoleWhite.Printf("Workers: %d %-*s Job Name: %s\n", workerCount, colWidth, "", jobName)
 
-	text := fmt.Sprintf("Workers: %d %-*s Job Name: %s", workerCount, colWidth, "", jobName)
-	divider := strings.Repeat("-", len(text))
-	config.ConsoleWhite.Println(divider)
+		text := fmt.Sprintf("Workers: %d %-*s Job Name: %s", workerCount, colWidth, "", jobName)
+		divider := strings.Repeat("-", len(text))
+		config.ConsoleWhite.Println(divider)
 
-	col1 = fmt.Sprintf("  Workers In Use:%v", "")
-	colWidth = common.ConsoleColumnWidth(col1, 35)
-	config.ConsoleWhite.Printf("  Workers In Use: %-*s %v\n", colWidth, "", workerCount)
+		col1 = fmt.Sprintf("  Workers In Use:%v", "")
+		colWidth = common.ConsoleColumnWidth(col1, 35)
+		config.ConsoleWhite.Printf("  Workers In Use: %-*s %v\n", colWidth, "", workerCount)
 
-	col1 = fmt.Sprintf("  Workers Available:%v", "")
-	colWidth = common.ConsoleColumnWidth(col1, 35)
-	config.ConsoleWhite.Printf("  Workers Available: %-*s %v\n", colWidth, "", config.WorkersAvailable)
+		col1 = fmt.Sprintf("  Workers Available:%v", "")
+		colWidth = common.ConsoleColumnWidth(col1, 35)
+		config.ConsoleWhite.Printf("  Workers Available: %-*s %v\n", colWidth, "", config.WorkersAvailable)
 
-	col1 = fmt.Sprintf("  Workers Idle:%v", "")
-	colWidth = common.ConsoleColumnWidth(col1, 35)
-	config.ConsoleWhite.Printf("  Workers Idle: %-*s %v\n", colWidth, "", config.WorkersAvailable-workerCount)
+		col1 = fmt.Sprintf("  Workers Idle:%v", "")
+		colWidth = common.ConsoleColumnWidth(col1, 35)
+		config.ConsoleWhite.Printf("  Workers Idle: %-*s %v\n", colWidth, "", config.WorkersAvailable-workerCount)
 
-	col1 = fmt.Sprintf("  Number of Jobs:%v", "")
-	colWidth = common.ConsoleColumnWidth(col1, 35)
-	config.ConsoleWhite.Printf("  Number of Jobs: %-*s %v\n", colWidth, "", numberOfJobs)
+		col1 = fmt.Sprintf("  Number of Jobs:%v", "")
+		colWidth = common.ConsoleColumnWidth(col1, 35)
+		config.ConsoleWhite.Printf("  Number of Jobs: %-*s %v\n", colWidth, "", numberOfJobs)
 
-	config.ConsoleWhite.Println(divider)
-	fmt.Println()
+		config.ConsoleWhite.Println(divider)
+		fmt.Println()
+	}
 
 	go AllocateJob(numberOfJobs)
 	done := make(chan bool)
@@ -129,14 +141,18 @@ func Workers(workerCount int, jobCount int, jobName string) float64 {
 	endTime := time.Now()
 	diff := endTime.Sub(startTime)
 
-	fmt.Println()
-	text = fmt.Sprintf("Total time taken: %-*s %f %s\n", colWidth, "", diff.Seconds(), "Seconds")
-	divider = strings.Repeat("-", len(text))
-	config.ConsoleGreen.Println(divider)
+	if config.Debug {
+		fmt.Println()
+		col1 := fmt.Sprintf("  Workers Idle:%v", "")
+		colWidth := common.ConsoleColumnWidth(col1, 35)
+		text := fmt.Sprintf("Total time taken: %-*s %f %s\n", colWidth, "", diff.Seconds(), "Seconds")
+		divider := strings.Repeat("-", len(text))
+		config.ConsoleGreen.Println(divider)
 
-	col1 = fmt.Sprintf("Total time taken:%v", "")
-	colWidth = common.ConsoleColumnWidth(col1, 35)
-	config.ConsoleGreen.Printf("Total time taken: %-*s %f %s\n\n\n", colWidth, "", diff.Seconds(), "Seconds")
+		col1 = fmt.Sprintf("Total time taken:%v", "")
+		colWidth = common.ConsoleColumnWidth(col1, 35)
+		config.ConsoleGreen.Printf("Total time taken: %-*s %f %s\n\n\n", colWidth, "", diff.Seconds(), "Seconds")
+	}
 
 	workersElapsedTime = diff.Seconds()
 	return float64(workersElapsedTime)
@@ -144,9 +160,12 @@ func Workers(workerCount int, jobCount int, jobName string) float64 {
 
 func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 	for job := range jobs {
-		col1 := fmt.Sprintf("  JOB %v/%v STARTED:", job.JobNumber, config.TotalJobCount)
-		colWidth := common.ConsoleColumnWidth(col1, 35)
-		config.ConsoleCyan.Printf("  JOB %v/%v STARTED: %-*s %v with Worker: %v\n", job.JobNumber, config.TotalJobCount, colWidth, "", job.Id, workerID)
+		if config.Debug {
+			col1 := fmt.Sprintf("  JOB %v/%v STARTED:", job.JobNumber, config.TotalJobCount)
+			colWidth := common.ConsoleColumnWidth(col1, 35)
+			config.ConsoleCyan.Printf("  JOB %v/%v STARTED: %-*s %v with Worker: %v\n", job.JobNumber, config.TotalJobCount, colWidth, "", job.Id, workerID)
+		}
+
 		var jobResult, jobTimer = PerformJob(job)
 		output := JobResult{WorkerID: workerID, Job: job, NumberOfJobs: noOfJobs, JobTimer: jobTimer, JobName: job.JobName, Status: jobResult}
 		jobResults <- output
