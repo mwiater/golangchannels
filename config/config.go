@@ -28,9 +28,7 @@ var TotalJobCount int
 // AppConfig returns a new decoded Config struct
 func AppConfig() (map[string]string, error) {
 	envVars, _ := EnvVarsFile.ReadFile(".env")
-
 	lines := common.SplitStringLines(string(envVars))
-
 	var envs = make(map[string]string)
 	for _, line := range lines {
 		keyValuePair := strings.Split(line, "=")

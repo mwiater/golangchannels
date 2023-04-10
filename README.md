@@ -296,23 +296,50 @@ In another terminal, use `pprof`, e.g.:
 `go tool pprof http://192.168.0.99:6060/debug/pprof/mutex`
 
 
-go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_1.png
-go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_8.png
-go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > heap_16.png
+go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > pprof/heap_1.png
+go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > pprof/heap_8.png
+go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > pprof/heap_16.png
 
 
-go tool pprof -png http://192.168.129.52:6060/debug/pprof/heap > heap_16.png
+go tool pprof -png http://192.168.129.52:6060/debug/pprof/heap > pprof/heap_16.png
 
 
-curl -sK -v http://192.168.129.52:6060/debug/pprof/heap > heap.out
-go tool pprof heap.out
+curl -sK -v http://192.168.129.52:6060/debug/pprof/heap > pprof/heap.out
+go tool pprof pprof/heap.out
 
 
-curl -sK -v http://192.168.129.52:6060/debug/pprof/goroutine > goroutines-1.out
-clear && go tool pprof goroutines-1.out
+curl -sK -v http://192.168.0.99:6060/debug/pprof/goroutine > pprof/goroutines-1.out
+clear && go tool pprof pprof/goroutines-1.out
 
-curl -sK -v http://192.168.129.52:6060/debug/pprof/goroutine > goroutines-4.out
-clear && go tool pprof goroutines-4.out
+curl -sK -v http://192.168.0.99:6060/debug/pprof/goroutine > pprof/goroutines-2.out
+clear && go tool pprof pprof/goroutines-2.out
 
-curl -sK -v http://192.168.129.52:6060/debug/pprof/goroutine > goroutines-16.out
-clear && go tool pprof goroutines-16.out
+curl -sK -v http://192.168.0.99:6060/debug/pprof/goroutine > pprof/goroutines-8.out
+clear && go tool pprof pprof/goroutines-8.out
+
+curl -sK -v http://192.168.0.99:6060/debug/pprof/goroutine > pprof/goroutines-16.out
+clear && go tool pprof pprof/goroutines-16.out
+
+
+curl http://192.168.0.99:6060/debug/pprof/trace?seconds=5 > pprof/trace-1.out
+go tool trace -http=':8081' trace pprof/trace-1.out
+
+curl http://192.168.0.99:6060/debug/pprof/trace?seconds=5 > pprof/trace-8.out
+go tool trace -http=':8082' trace pprof/trace-8.out
+
+curl http://192.168.0.99:6060/debug/pprof/trace?seconds=10 > pprof/trace-15.out
+go tool trace -http=':8081' trace pprof/trace-15.out
+
+curl http://192.168.0.99:6060/debug/pprof/trace?seconds=10 > pprof/trace-16.out
+go tool trace -http=':8082' trace pprof/trace-16.out
+
+
+
+pprof -http :8080 http://:8080/debug/pprof/goroutine
+
+
+curl http://192.168.0.99:6060/debug/pprof/profile?seconds=5 > pprof/pprof-1.out
+clear && go tool pprof pprof/pprof-1.out
+
+
+clear && go tool pprof pprof/cpu.pprof

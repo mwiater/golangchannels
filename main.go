@@ -17,6 +17,7 @@ import (
 	"github.com/mattwiater/golangchannels/network"
 	"github.com/mattwiater/golangchannels/workers"
 	"github.com/olekukonko/tablewriter"
+	"github.com/pkg/profile"
 )
 
 //go:embed .env
@@ -67,6 +68,9 @@ func main() {
 		fmt.Println("\nShutting down.")
 		os.Exit(0)
 	}()
+
+	//defer profile.Start(profile.MemProfile, profile.ProfilePath("./pprof/1")).Stop()
+	defer profile.Start(profile.CPUProfile, profile.ProfilePath("./pprof/16")).Stop()
 
 	dispatcher.Run()
 
