@@ -14,8 +14,6 @@ var table = []struct {
 	{workerCount: 2},
 	{workerCount: 4},
 	{workerCount: 8},
-	{workerCount: 16},
-	{workerCount: 32},
 }
 
 func BenchmarkRun(b *testing.B) {

@@ -27,6 +27,9 @@ golang-build:
 golang-test:
 	scripts/golang_test.sh
 
+golang-benchmark:
+	scripts/golang_benchmark.sh
+
 golang-lint:
 	scripts/golang_lint.sh
 
