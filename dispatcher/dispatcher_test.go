@@ -14,6 +14,8 @@ var table = []struct {
 	{workerCount: 2},
 	{workerCount: 4},
 	{workerCount: 8},
+	{workerCount: 16},
+	{workerCount: 32},
 }
 
 func BenchmarkRun(b *testing.B) {
@@ -21,6 +23,5 @@ func BenchmarkRun(b *testing.B) {
 		b.Run(fmt.Sprintf("Worker Count: %d", v.workerCount), func(b *testing.B) {
 			dispatcher.Run(1, v.workerCount, 16)
 		})
-
 	}
 }

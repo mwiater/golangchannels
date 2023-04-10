@@ -100,7 +100,6 @@ func main() {
 		table.Append([]string{workerCountString, jobsCountString, timeString, speedIncrease})
 	}
 
-	if config.Debug {
-		table.Render()
-	}
+	fmt.Println("\nSummary:")
+	table.Render()
 }

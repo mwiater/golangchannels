@@ -282,7 +282,23 @@ For details on these commands, see the bash scripts in the 'scripts/' directory.
 
 `make golang-test` To test the application using `gotestsum` **[gotestsum](https://github.com/gotestyourself/gotestsum#install) must be installed.**
 
-### Pprof
+## Benchmark Tests
+
+go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^#
+
+```
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-4710HQ CPU @ 2.50GHz
+BenchmarkRun/Worker_Count:_1-4                 1        16146444436 ns/op          30928 B/op        544 allocs/op
+BenchmarkRun/Worker_Count:_2-4                 1        24222110267 ns/op          60024 B/op        945 allocs/op
+BenchmarkRun/Worker_Count:_4-4                 1        34276538515 ns/op         108120 B/op       1875 allocs/op
+BenchmarkRun/Worker_Count:_8-4                 1        46177171792 ns/op         221144 B/op       3801 allocs/op
+BenchmarkRun/Worker_Count:_16-4                1        61595901059 ns/op         446888 B/op       7753 allocs/op
+BenchmarkRun/Worker_Count:_32-4                1        77386635694 ns/op        1097160 B/op      16174 allocs/op
+```
+
+## Pprof
 
 Run app.
 
