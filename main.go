@@ -17,7 +17,6 @@ import (
 	"github.com/mattwiater/golangchannels/network"
 	"github.com/mattwiater/golangchannels/workers"
 	"github.com/olekukonko/tablewriter"
-	"github.com/pkg/profile"
 )
 
 //go:embed .env
@@ -69,23 +68,21 @@ func main() {
 		os.Exit(0)
 	}()
 
-	if cfg["PPROF"] == "true" {
-		//defer profile.Start(profile.MemProfile, profile.ProfilePath("./pprof/1")).Stop()
-		defer profile.Start(profile.CPUProfile, profile.ProfilePath("./pprof/16")).Stop()
-	}
-
 	dispatcher.Run(config.StartingWorkerCount, config.MaxWorkerCount, config.TotalJobCount)
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Number of Workers", "Number of Jobs", "Execution Time", "Speed Increase"})
+	table.SetHeader([]string{"Number of Workers", "Number of Jobs", "Average Job Execution Time", "Total Worker Execution Time", "Speed Increase"})
 
 	for i, stat := range workers.WorkerStats {
+		currentStatJobElapsedAverage := stat.JobElapsedAverage
 		currentStatExecutionTime := stat.ExecutionTime
 		baselineExecutionTime := workers.WorkerStats[0].ExecutionTime
 
-		timeString := fmt.Sprintf("%f", currentStatExecutionTime)
 		workerCountString := fmt.Sprintf("%v", stat.Workers)
 		jobsCountString := fmt.Sprintf("%v", config.TotalJobCount)
+		jobExecutionAverage := fmt.Sprintf("%f", currentStatJobElapsedAverage)
+		workerExecutionTime := fmt.Sprintf("%f", currentStatExecutionTime)
+
 		speedIncrease := "(baseline)"
 
 		if i < len(workers.WorkerStats) && i > int(0) {
@@ -97,7 +94,7 @@ func main() {
 				speedIncrease = fmt.Sprintf("-%vx", math.Round((baselineExecutionTime/currentStatExecutionTime)*100)/100)
 			}
 		}
-		table.Append([]string{workerCountString, jobsCountString, timeString, speedIncrease})
+		table.Append([]string{workerCountString, jobsCountString, jobExecutionAverage, workerExecutionTime, speedIncrease})
 	}
 
 	fmt.Println("\nSummary:")

@@ -24,8 +24,8 @@ func Run(startingWorkerCount int, maxWorkerCount int, totalJobCount int) {
 			fmt.Println()
 		}
 
-		elapsed := workers.Workers(currentWorkers, totalJobCount, "emptySleepJob")
-		workers.WorkerStats = append(workers.WorkerStats, workers.WorkerStat{Workers: currentWorkers, ExecutionTime: elapsed})
+		workerElapsed, jobElapsedAverage := workers.Workers(currentWorkers, totalJobCount, "piJob")
+		workers.WorkerStats = append(workers.WorkerStats, workers.WorkerStat{Workers: currentWorkers, ExecutionTime: workerElapsed, JobElapsedAverage: jobElapsedAverage})
 
 		testCount++
 	}

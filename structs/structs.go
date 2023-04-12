@@ -22,9 +22,10 @@ type JobResult struct {
 }
 
 type WorkerStat struct {
-	Workers       int
-	ExecutionTime float64
-	Data          string
+	Workers           int
+	ExecutionTime     float64
+	JobElapsedAverage float64
+	Data              string
 }
 
 type WeaselsJobResult struct {

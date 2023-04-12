@@ -65,78 +65,99 @@ Workers: 8                           Job Name: emptySleepJob
   Number of Jobs:                    16
 ------------------------------------------------------------
 
-Allocating Worker #1:                4add73e2-da2b-4637-a4fb-51543d5509b4
-Allocating Worker #2:                6916721e-d3da-493e-bce8-71cd4eb3de10
-Allocating Worker #3:                32332fcb-64f7-43c7-8c3f-26e18648384e
-Allocating Worker #4:                d5be5f1c-2477-4d5d-8322-2ef428b0f535
-Allocating Worker #5:                41f951d9-a878-4f5e-9265-9924ec2f815a
-Allocating Worker #6:                81e7fd26-7e5b-45f7-811c-7d356f140593
-Allocating Worker #7:                d21cdd06-f55e-4e3f-9c01-ed79fe543711
-Allocating Worker #8:                da2e47c2-a7bf-428f-b029-2c4ea51422d4
-  Allocating Job #1:                 8c183aa8-5b10-49aa-b1cd-9dfa0b1db194
-  Allocating Job #2:                 697b8947-0273-46a3-bf42-0995b2daed30
-  Allocating Job #3:                 f2df6e2a-3f85-4b27-b7cd-b4aa1f6883b8
-  Allocating Job #4:                 919f3133-50d8-4152-bf59-92cc7eca50b4
-  JOB 2/16 STARTED:                  697b8947-0273-46a3-bf42-0995b2daed30 with Worker: 6916721e-d3da-493e-bce8-71cd4eb3de10
-  JOB 3/16 STARTED:                  f2df6e2a-3f85-4b27-b7cd-b4aa1f6883b8 with Worker: 32332fcb-64f7-43c7-8c3f-26e18648384e
-  JOB 4/16 STARTED:                  919f3133-50d8-4152-bf59-92cc7eca50b4 with Worker: da2e47c2-a7bf-428f-b029-2c4ea51422d4
-  JOB 1/16 STARTED:                  8c183aa8-5b10-49aa-b1cd-9dfa0b1db194 with Worker: 4add73e2-da2b-4637-a4fb-51543d5509b4
-  Allocating Job #5:                 e388ad83-4ba2-454d-925d-db40988fd161
-  Allocating Job #6:                 0eda2855-7f5b-4f61-82fd-161e809892ec
-  Allocating Job #7:                 c8d8bd76-f463-4968-bdda-3113b06adca0
-  Allocating Job #8:                 78fa697a-42e6-45b8-80b2-c4a7415b8cc4
-  Allocating Job #9:                 b9220f71-dab5-4329-b1c6-5f49a117d616
-  Allocating Job #10:                ee86c5d7-8ff2-4c76-8dbd-78ad66d5aa1a
-  Allocating Job #11:                c2336100-de1f-4433-b82d-683f48861e64
-  Allocating Job #12:                765de944-9ec6-4b50-af3a-b3decd81e967
-  Allocating Job #13:                f581ddd6-aec2-423f-be13-9c6bc0fddeaa
-  Allocating Job #14:                0684858e-9d93-42fd-a203-f4b73c40dfab
-  Allocating Job #15:                e8740614-c7cf-41b1-b946-6077ba5b8a20
-  Allocating Job #16:                a782c1e8-6569-47bf-99c0-15de8846ed30
-  JOB 6/16 STARTED:                  0eda2855-7f5b-4f61-82fd-161e809892ec with Worker: d5be5f1c-2477-4d5d-8322-2ef428b0f535
-  JOB 5/16 STARTED:                  e388ad83-4ba2-454d-925d-db40988fd161 with Worker: 41f951d9-a878-4f5e-9265-9924ec2f815a
-  JOB 8/16 STARTED:                  78fa697a-42e6-45b8-80b2-c4a7415b8cc4 with Worker: 81e7fd26-7e5b-45f7-811c-7d356f140593
-  JOB 7/16 STARTED:                  c8d8bd76-f463-4968-bdda-3113b06adca0 with Worker: d21cdd06-f55e-4e3f-9c01-ed79fe543711
-  JOB 9/16 STARTED:                  b9220f71-dab5-4329-b1c6-5f49a117d616 with Worker: 4add73e2-da2b-4637-a4fb-51543d5509b4
-  JOB 10/16 STARTED:                 ee86c5d7-8ff2-4c76-8dbd-78ad66d5aa1a with Worker: d21cdd06-f55e-4e3f-9c01-ed79fe543711
-  JOB 13/16 STARTED:                 f581ddd6-aec2-423f-be13-9c6bc0fddeaa with Worker: da2e47c2-a7bf-428f-b029-2c4ea51422d4
-    -> JOB 1/16 COMPLETED:           8c183aa8-5b10-49aa-b1cd-9dfa0b1db194 with Worker: 4add73e2-da2b-4637-a4fb-51543d5509b4 (Ran emptySleepJob in 1.000478511 Seconds)
-  JOB 14/16 STARTED:                 0684858e-9d93-42fd-a203-f4b73c40dfab with Worker: 81e7fd26-7e5b-45f7-811c-7d356f140593
-  JOB 11/16 STARTED:                 c2336100-de1f-4433-b82d-683f48861e64 with Worker: 6916721e-d3da-493e-bce8-71cd4eb3de10
-    -> JOB 7/16 COMPLETED:           c8d8bd76-f463-4968-bdda-3113b06adca0 with Worker: d21cdd06-f55e-4e3f-9c01-ed79fe543711 (Ran emptySleepJob in 1.000410017 Seconds)
-  JOB 16/16 STARTED:                 a782c1e8-6569-47bf-99c0-15de8846ed30 with Worker: d5be5f1c-2477-4d5d-8322-2ef428b0f535
-  JOB 15/16 STARTED:                 e8740614-c7cf-41b1-b946-6077ba5b8a20 with Worker: 41f951d9-a878-4f5e-9265-9924ec2f815a
-    -> JOB 2/16 COMPLETED:           697b8947-0273-46a3-bf42-0995b2daed30 with Worker: 6916721e-d3da-493e-bce8-71cd4eb3de10 (Ran emptySleepJob in 1.000579614 Seconds)
-    -> JOB 3/16 COMPLETED:           f2df6e2a-3f85-4b27-b7cd-b4aa1f6883b8 with Worker: 32332fcb-64f7-43c7-8c3f-26e18648384e (Ran emptySleepJob in 1.000560273 Seconds)
-    -> JOB 4/16 COMPLETED:           919f3133-50d8-4152-bf59-92cc7eca50b4 with Worker: da2e47c2-a7bf-428f-b029-2c4ea51422d4 (Ran emptySleepJob in 1.000556052 Seconds)
-    -> JOB 8/16 COMPLETED:           78fa697a-42e6-45b8-80b2-c4a7415b8cc4 with Worker: 81e7fd26-7e5b-45f7-811c-7d356f140593 (Ran emptySleepJob in 1.000437111 Seconds)
-    -> JOB 5/16 COMPLETED:           e388ad83-4ba2-454d-925d-db40988fd161 with Worker: 41f951d9-a878-4f5e-9265-9924ec2f815a (Ran emptySleepJob in 1.000455047 Seconds)
-    -> JOB 6/16 COMPLETED:           0eda2855-7f5b-4f61-82fd-161e809892ec with Worker: d5be5f1c-2477-4d5d-8322-2ef428b0f535 (Ran emptySleepJob in 1.000459854 Seconds)
-  JOB 12/16 STARTED:                 765de944-9ec6-4b50-af3a-b3decd81e967 with Worker: 32332fcb-64f7-43c7-8c3f-26e18648384e
-    -> JOB 11/16 COMPLETED:          c2336100-de1f-4433-b82d-683f48861e64 with Worker: 6916721e-d3da-493e-bce8-71cd4eb3de10 (Ran emptySleepJob in 1.001107541 Seconds)
-    -> JOB 13/16 COMPLETED:          f581ddd6-aec2-423f-be13-9c6bc0fddeaa with Worker: da2e47c2-a7bf-428f-b029-2c4ea51422d4 (Ran emptySleepJob in 1.001115304 Seconds)
-    -> JOB 15/16 COMPLETED:          e8740614-c7cf-41b1-b946-6077ba5b8a20 with Worker: 41f951d9-a878-4f5e-9265-9924ec2f815a (Ran emptySleepJob in 1.001170553 Seconds)
-    -> JOB 16/16 COMPLETED:          a782c1e8-6569-47bf-99c0-15de8846ed30 with Worker: d5be5f1c-2477-4d5d-8322-2ef428b0f535 (Ran emptySleepJob in 1.001130361 Seconds)
-    -> JOB 12/16 COMPLETED:          765de944-9ec6-4b50-af3a-b3decd81e967 with Worker: 32332fcb-64f7-43c7-8c3f-26e18648384e (Ran emptySleepJob in 1.00112921 Seconds)
-    -> JOB 9/16 COMPLETED:           b9220f71-dab5-4329-b1c6-5f49a117d616 with Worker: 4add73e2-da2b-4637-a4fb-51543d5509b4 (Ran emptySleepJob in 1.001230054 Seconds)
-    -> JOB 14/16 COMPLETED:          0684858e-9d93-42fd-a203-f4b73c40dfab with Worker: 81e7fd26-7e5b-45f7-811c-7d356f140593 (Ran emptySleepJob in 1.001195592 Seconds)
-    -> JOB 10/16 COMPLETED:          ee86c5d7-8ff2-4c76-8dbd-78ad66d5aa1a with Worker: d21cdd06-f55e-4e3f-9c01-ed79fe543711 (Ran emptySleepJob in 1.001210098 Seconds)
+Allocating Worker #1:                391755d9-bc82-4c9c-8914-4137d2f528af
+Allocating Worker #2:                39f98b30-d928-4268-a620-c083f8f09855
+Allocating Worker #3:                1cd12e59-af15-4ff4-99b5-80323473139d
+Allocating Worker #4:                bf4fa589-80ba-4b56-9c00-4417163fd201
+Allocating Worker #5:                8625e635-1e1a-4e63-a33d-854be7a0de96
+Allocating Worker #6:                dd1b66d7-c5cc-4c30-a31d-17d6c0e9e605
+Allocating Worker #7:                22032e71-9928-41b7-894f-5b2d4d4297f1
+Allocating Worker #8:                f46f2080-62dc-45fb-8582-d4d0fec75252
+  Allocating Job #1:                 fd7adabd-3110-4936-9373-5476d811204e
+  Allocating Job #2:                 004eae10-a38a-4464-8142-1fd5fa104a43
+  Allocating Job #3:                 c3ec6f42-a509-44ef-bc0b-e8e85a985b90
+  Allocating Job #4:                 c9cc844a-d031-49e5-b8c3-c21e22c3f77c
+  Allocating Job #5:                 2bd2783d-bb7c-4d6a-9f28-46a304df11a1
+  Allocating Job #6:                 fc6624a6-a86c-40ed-a199-a02674f6a8cc
+  Allocating Job #7:                 867f7c61-f4c3-488f-b3ac-9e9fe2ea3aa8
+  Allocating Job #8:                 0f264516-1bfd-44d6-ba0b-b98910578258
+  Allocating Job #9:                 bcb65aa7-6b72-49b1-86de-01d6c34a203a
+  Allocating Job #10:                a09aef1a-12a5-4ccf-8b1e-0c82604ec07f
+  Allocating Job #11:                783cee5a-2959-4a5b-a7c1-c31017442a14
+  Allocating Job #12:                47e23ff7-4001-402f-a94a-50da80b501cb
+  Allocating Job #13:                3daca53a-a6d1-41d3-abd9-76fb152da200
+  Allocating Job #14:                097ae54f-3611-45f9-90eb-9788390e98d5
+  Allocating Job #15:                59c73a0f-54e4-488c-b196-260d1d29fea3
+  Allocating Job #16:                1dc2c78d-d051-49e6-8985-45b9710d073f
+  JOB 1/16 STARTED:                  fd7adabd-3110-4936-9373-5476d811204e with Worker: f46f2080-62dc-45fb-8582-d4d0fec75252
+  JOB 2/16 STARTED:                  004eae10-a38a-4464-8142-1fd5fa104a43 with Worker: 391755d9-bc82-4c9c-8914-4137d2f528af
+  JOB 3/16 STARTED:                  c3ec6f42-a509-44ef-bc0b-e8e85a985b90 with Worker: 39f98b30-d928-4268-a620-c083f8f09855
+  JOB 4/16 STARTED:                  c9cc844a-d031-49e5-b8c3-c21e22c3f77c with Worker: 1cd12e59-af15-4ff4-99b5-80323473139d
+  JOB 5/16 STARTED:                  2bd2783d-bb7c-4d6a-9f28-46a304df11a1 with Worker: bf4fa589-80ba-4b56-9c00-4417163fd201
+  JOB 6/16 STARTED:                  fc6624a6-a86c-40ed-a199-a02674f6a8cc with Worker: 8625e635-1e1a-4e63-a33d-854be7a0de96
+  JOB 7/16 STARTED:                  867f7c61-f4c3-488f-b3ac-9e9fe2ea3aa8 with Worker: dd1b66d7-c5cc-4c30-a31d-17d6c0e9e605
+  JOB 8/16 STARTED:                  0f264516-1bfd-44d6-ba0b-b98910578258 with Worker: 22032e71-9928-41b7-894f-5b2d4d4297f1
+  JOB 9/16 STARTED:                  bcb65aa7-6b72-49b1-86de-01d6c34a203a with Worker: 22032e71-9928-41b7-894f-5b2d4d4297f1
+    -> JOB 8/16 COMPLETED:           0f264516-1bfd-44d6-ba0b-b98910578258 with Worker: 22032e71-9928-41b7-894f-5b2d4d4297f1 (Ran emptySleepJob in 1.001227428 Seconds)
+  JOB 10/16 STARTED:                 a09aef1a-12a5-4ccf-8b1e-0c82604ec07f with Worker: bf4fa589-80ba-4b56-9c00-4417163fd201
+    -> JOB 5/16 COMPLETED:           2bd2783d-bb7c-4d6a-9f28-46a304df11a1 with Worker: bf4fa589-80ba-4b56-9c00-4417163fd201 (Ran emptySleepJob in 1.001321472 Seconds)
+    -> JOB 4/16 COMPLETED:           c9cc844a-d031-49e5-b8c3-c21e22c3f77c with Worker: 1cd12e59-af15-4ff4-99b5-80323473139d (Ran emptySleepJob in 1.001343448 Seconds)
+  JOB 11/16 STARTED:                 783cee5a-2959-4a5b-a7c1-c31017442a14 with Worker: 1cd12e59-af15-4ff4-99b5-80323473139d
+  JOB 15/16 STARTED:                 59c73a0f-54e4-488c-b196-260d1d29fea3 with Worker: f46f2080-62dc-45fb-8582-d4d0fec75252
+  JOB 14/16 STARTED:                 097ae54f-3611-45f9-90eb-9788390e98d5 with Worker: 391755d9-bc82-4c9c-8914-4137d2f528af
+    -> JOB 7/16 COMPLETED:           867f7c61-f4c3-488f-b3ac-9e9fe2ea3aa8 with Worker: dd1b66d7-c5cc-4c30-a31d-17d6c0e9e605 (Ran emptySleepJob in 1.001342991 Seconds)
+    -> JOB 6/16 COMPLETED:           fc6624a6-a86c-40ed-a199-a02674f6a8cc with Worker: 8625e635-1e1a-4e63-a33d-854be7a0de96 (Ran emptySleepJob in 1.00134668 Seconds)
+  JOB 16/16 STARTED:                 1dc2c78d-d051-49e6-8985-45b9710d073f with Worker: 39f98b30-d928-4268-a620-c083f8f09855
+  JOB 12/16 STARTED:                 47e23ff7-4001-402f-a94a-50da80b501cb with Worker: dd1b66d7-c5cc-4c30-a31d-17d6c0e9e605
+  JOB 13/16 STARTED:                 3daca53a-a6d1-41d3-abd9-76fb152da200 with Worker: 8625e635-1e1a-4e63-a33d-854be7a0de96
+    -> JOB 2/16 COMPLETED:           004eae10-a38a-4464-8142-1fd5fa104a43 with Worker: 391755d9-bc82-4c9c-8914-4137d2f528af (Ran emptySleepJob in 1.001376729 Seconds)
+    -> JOB 1/16 COMPLETED:           fd7adabd-3110-4936-9373-5476d811204e with Worker: f46f2080-62dc-45fb-8582-d4d0fec75252 (Ran emptySleepJob in 1.001385292 Seconds)
+    -> JOB 3/16 COMPLETED:           c3ec6f42-a509-44ef-bc0b-e8e85a985b90 with Worker: 39f98b30-d928-4268-a620-c083f8f09855 (Ran emptySleepJob in 1.001376315 Seconds)
+    -> JOB 15/16 COMPLETED:          59c73a0f-54e4-488c-b196-260d1d29fea3 with Worker: f46f2080-62dc-45fb-8582-d4d0fec75252 (Ran emptySleepJob in 1.001151321 Seconds)
+    -> JOB 13/16 COMPLETED:          3daca53a-a6d1-41d3-abd9-76fb152da200 with Worker: 8625e635-1e1a-4e63-a33d-854be7a0de96 (Ran emptySleepJob in 1.001117998 Seconds)
+    -> JOB 9/16 COMPLETED:           bcb65aa7-6b72-49b1-86de-01d6c34a203a with Worker: 22032e71-9928-41b7-894f-5b2d4d4297f1 (Ran emptySleepJob in 1.001285919 Seconds)
+    -> JOB 10/16 COMPLETED:          a09aef1a-12a5-4ccf-8b1e-0c82604ec07f with Worker: bf4fa589-80ba-4b56-9c00-4417163fd201 (Ran emptySleepJob in 1.001233061 Seconds)
+    -> JOB 12/16 COMPLETED:          47e23ff7-4001-402f-a94a-50da80b501cb with Worker: dd1b66d7-c5cc-4c30-a31d-17d6c0e9e605 (Ran emptySleepJob in 1.001143418 Seconds)
+    -> JOB 16/16 COMPLETED:          1dc2c78d-d051-49e6-8985-45b9710d073f with Worker: 39f98b30-d928-4268-a620-c083f8f09855 (Ran emptySleepJob in 1.001150912 Seconds)
+    -> JOB 11/16 COMPLETED:          783cee5a-2959-4a5b-a7c1-c31017442a14 with Worker: 1cd12e59-af15-4ff4-99b5-80323473139d (Ran emptySleepJob in 1.001207857 Seconds)
+    -> JOB 14/16 COMPLETED:          097ae54f-3611-45f9-90eb-9788390e98d5 with Worker: 391755d9-bc82-4c9c-8914-4137d2f528af (Ran emptySleepJob in 1.001135284 Seconds)
 
-------------------------------------------------------
-Total time taken:                    2.002621 Seconds
+-----------------------------------------------------------------------
+Total time taken:                    2.003099 Seconds
 
+Summary:
 +-------------------+----------------+----------------+----------------+
 | NUMBER OF WORKERS | NUMBER OF JOBS | EXECUTION TIME | SPEED INCREASE |
 +-------------------+----------------+----------------+----------------+
-|                 1 |             16 |      16.125234 | (baseline)     |
-|                 2 |             16 |       8.045123 | +2x            |
-|                 3 |             16 |       6.035669 | +2.67x         |
-|                 4 |             16 |       4.003083 | +4.03x         |
-|                 5 |             16 |       4.008031 | +4.02x         |
-|                 6 |             16 |       3.015694 | +5.35x         |
-|                 7 |             16 |       3.014996 | +5.35x         |
-|                 8 |             16 |       2.002621 | +8.05x         |
+|                 1 |             16 |      16.048032 | (baseline)     |
+|                 2 |             16 |       8.046808 | +1.99x         |
+|                 3 |             16 |       6.026783 | +2.66x         |
+|                 4 |             16 |       4.028621 | +3.98x         |
+|                 5 |             16 |       4.021466 | +3.99x         |
+|                 6 |             16 |       3.022764 | +5.31x         |
+|                 7 |             16 |       3.007792 | +5.34x         |
+|                 8 |             16 |       2.003099 | +8.01x         |
 +-------------------+----------------+----------------+----------------+
+```
+
+Benchmark comparison: `make-golang-benchmark`
+
+```
+Running benchmarks...
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_1-8                 1        46110535159 ns/op         223928 B/op       3882 allocs/op
+BenchmarkRun/Worker_Count:_2-8                 1        30029084843 ns/op         197120 B/op       3336 allocs/op
+BenchmarkRun/Worker_Count:_3-8                 1        22048430705 ns/op         217528 B/op       2856 allocs/op
+BenchmarkRun/Worker_Count:_4-8                 1        16022740159 ns/op         111064 B/op       2379 allocs/op
+BenchmarkRun/Worker_Count:_5-8                 1        12008797437 ns/op          87400 B/op       1908 allocs/op
+BenchmarkRun/Worker_Count:_6-8                 1        8010978770 ns/op           67784 B/op       1434 allocs/op
+BenchmarkRun/Worker_Count:_7-8                 1        5005642671 ns/op           45944 B/op        966 allocs/op
+BenchmarkRun/Worker_Count:_8-8                 1        2008275612 ns/op           24672 B/op        505 allocs/op
+PASS
+ok      command-line-arguments  141.255s
+...Complete.
 ```
 
 **Overloading EmptySleepJob() Results:**
@@ -284,76 +305,349 @@ For details on these commands, see the bash scripts in the 'scripts/' directory.
 
 ## Benchmark Tests
 
-`go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^#` (or: ``)
+Results of running the application: 8 Iterations, starting with 1 Worker, ending with 8 Workers, all processing 64 of the same job (PiJob)
 
 ```
+Summary:
++-------------------+----------------+----------------------------+-----------------------------+----------------+
+| NUMBER OF WORKERS | NUMBER OF JOBS | AVERAGE JOB EXECUTION TIME | TOTAL WORKER EXECUTION TIME | SPEED INCREASE |
++-------------------+----------------+----------------------------+-----------------------------+----------------+
+|                 1 |             64 |                   1.005249 |                   64.455789 | (baseline)     |
+|                 2 |             64 |                   2.125810 |                   35.977528 | +1.79x         |
+|                 3 |             64 |                   3.469966 |                   29.420817 | +2.19x         |
+|                 4 |             64 |                   5.061737 |                   25.585365 | +2.52x         |
+|                 5 |             64 |                   6.913418 |                   24.061442 | +2.68x         |
+|                 6 |             64 |                   8.898033 |                   21.736235 | +2.97x         |
+|                 7 |             64 |                  11.084222 |                   20.750771 | +3.11x         |
+|                 8 |             64 |                  13.642186 |                   20.672078 | +3.12x         |
++-------------------+----------------+----------------------------+-----------------------------+----------------+
+```
+
+Results of the benchmarks:
+
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-01.out -memprofile ./pprof/memprofile-01.out -memprofile ./pprof/memprofile-01.out -blockprofile ./pprof/blockprofile-01.out -mutexprofile ./pprof/mutexprofile-01.out -args -startingWorkerCount=1 -maxWorkerCount=1 -jobCount=64` #=>
+
+```
+startingWorkerCount: 1 maxWorkerCount: 1 jobCount: 64
 goos: linux
 goarch: amd64
-cpu: Intel(R) Core(TM) i7-4710HQ CPU @ 2.50GHz
-BenchmarkRun/Worker_Count:_1-4                 1        16057412317 ns/op          31112 B/op        545 allocs/op
-BenchmarkRun/Worker_Count:_2-4                 1        24161105177 ns/op          59384 B/op        940 allocs/op
-BenchmarkRun/Worker_Count:_4-4                 1        34276402235 ns/op         108384 B/op       1877 allocs/op
-BenchmarkRun/Worker_Count:_8-4                 1        46423595683 ns/op         218392 B/op       3789 allocs/op
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_1-8                 1        64292688948 ns/op       35976337824 B/op        23511673 allocs/op
+PASS
+ok      command-line-arguments  64.467s
 ```
 
-## Pprof
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-02.out -memprofile ./pprof/memprofile-02.out -memprofile ./pprof/memprofile-02.out -blockprofile ./pprof/blockprofile-02.out -mutexprofile ./pprof/mutexprofile-02.out -args -startingWorkerCount=2 -maxWorkerCount=2 -jobCount=64` #=>
 
-Run app.
+```
+startingWorkerCount: 2 maxWorkerCount: 2 jobCount: 64
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_2-8                 1        38487971462 ns/op       36086760640 B/op        23605364 allocs/op
+PASS
+ok      command-line-arguments  38.683s
+```
 
-In another terminal, use `pprof`, e.g.:
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-03.out -memprofile ./pprof/memprofile-03.out -memprofile ./pprof/memprofile-03.out -blockprofile ./pprof/blockprofile-03.out -mutexprofile ./pprof/mutexprofile-03.out -args -startingWorkerCount=3 -maxWorkerCount=3 -jobCount=64` #=>
 
-`go tool pprof http://192.168.0.99:6060/debug/pprof/profile?seconds=5`
-`go tool pprof http://192.168.0.99:6060/debug/pprof/heap`
-`go tool pprof http://192.168.0.99:6060/debug/pprof/goroutine`
-`go tool pprof http://192.168.0.99:6060/debug/pprof/block`
-`go tool pprof http://192.168.0.99:6060/debug/pprof/threadcreate`
-`go tool pprof http://192.168.0.99:6060/debug/pprof/mutex`
+```
+startingWorkerCount: 3 maxWorkerCount: 3 jobCount: 64
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_3-8                 1        31649478509 ns/op       36098221112 B/op        23631627 allocs/op
+PASS
+ok      command-line-arguments  31.873s
+```
+
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-04.out -memprofile ./pprof/memprofile-04.out -memprofile ./pprof/memprofile-04.out -blockprofile ./pprof/blockprofile-04.out -mutexprofile ./pprof/mutexprofile-04.out -args -startingWorkerCount=4 -maxWorkerCount=4 -jobCount=64` #=>
+
+```
+startingWorkerCount: 4 maxWorkerCount: 4 jobCount: 64
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_4-8                 1        25412844723 ns/op       36074032056 B/op        23617726 allocs/op
+PASS
+ok      command-line-arguments  25.625s
+```
+
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-05.out -memprofile ./pprof/memprofile-05.out -memprofile ./pprof/memprofile-05.out -blockprofile ./pprof/blockprofile-05.out -mutexprofile ./pprof/mutexprofile-05.out -args -startingWorkerCount=5 -maxWorkerCount=5 -jobCount=64` #=>
+
+```
+startingWorkerCount: 5 maxWorkerCount: 5 jobCount: 64
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_5-8                 1        20767157101 ns/op       36104025472 B/op        23640474 allocs/op
+PASS
+ok      command-line-arguments  20.914s
+```
+
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-06.out -memprofile ./pprof/memprofile-06.out -memprofile ./pprof/memprofile-06.out -blockprofile ./pprof/blockprofile-06.out -mutexprofile ./pprof/mutexprofile-06.out -args -startingWorkerCount=6 -maxWorkerCount=6 -jobCount=64` #=>
+
+```
+startingWorkerCount: 6 maxWorkerCount: 6 jobCount: 64
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_6-8                 1        18937268938 ns/op       36135256720 B/op        23655645 allocs/op
+PASS
+ok      command-line-arguments  19.092s
+```
+
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-07.out -memprofile ./pprof/memprofile-07.out -memprofile ./pprof/memprofile-07.out -blockprofile ./pprof/blockprofile-07.out -mutexprofile ./pprof/mutexprofile-07.out -args -startingWorkerCount=7 -maxWorkerCount=7 -jobCount=64` #=>
+
+```
+startingWorkerCount: 7 maxWorkerCount: 7 jobCount: 64
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_7-8                 1        18182033241 ns/op       36135543352 B/op        23654627 allocs/op
+PASS
+ok      command-line-arguments  18.386s
+```
+
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-08.out -memprofile ./pprof/memprofile-08.out -memprofile ./pprof/memprofile-08.out -blockprofile ./pprof/blockprofile-08.out -mutexprofile ./pprof/mutexprofile-08.out -args -startingWorkerCount=8 -maxWorkerCount=8 -jobCount=64` #=>
+
+```
+startingWorkerCount: 8 maxWorkerCount: 8 jobCount: 64
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_8-8                 1        17796937403 ns/op       36178650928 B/op        23679568 allocs/op
+PASS
+ok      command-line-arguments  18.024s
+```
+
+Comparing CPU profiles via pperf:
+
+clear && go tool pprof pprof/cpuprofile-01.out
+
+```
+File: dispatcher.test
+Type: cpu
+Time: Apr 12, 2023 at 12:53pm (PDT)
+Duration: 64.44s, Total samples = 68.93s (106.97%)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof) top1000
+Showing nodes accounting for 62.46s, 90.61% of 68.93s total
+Dropped 261 nodes (cum <= 0.34s)
+      flat  flat%   sum%        cum   cum%
+    41.56s 60.29% 60.29%     41.56s 60.29%  math/big.addMulVVW
+     3.69s  5.35% 65.65%     46.83s 67.94%  math/big.basicSqr
+     2.81s  4.08% 69.72%      2.81s  4.08%  math/big.mulAddVWW
+     1.89s  2.74% 72.46%      1.89s  2.74%  math/big.subVV
+     1.78s  2.58% 75.05%      1.78s  2.58%  runtime.memclrNoHeapPointers
+     1.59s  2.31% 77.35%      1.59s  2.31%  math/big.shlVU
+     1.11s  1.61% 78.96%      2.10s  3.05%  runtime.scanobject
+     0.93s  1.35% 80.31%      1.20s  1.74%  runtime.scanblock
+     0.88s  1.28% 81.59%      0.88s  1.28%  math/big.addVV
+     0.78s  1.13% 82.72%      0.78s  1.13%  runtime.futex
+     0.72s  1.04% 83.77%      0.73s  1.06%  math/big.nat.norm (inline)
+     0.62s   0.9% 84.67%      0.62s   0.9%  runtime.madvise
+     0.53s  0.77% 85.43%      0.53s  0.77%  runtime.tgkill
+     0.50s  0.73% 86.16%      0.50s  0.73%  runtime.procyield
+     0.49s  0.71% 86.87%      4.81s  6.98%  math/big.nat.divBasic
+     0.40s  0.58% 87.45%      0.40s  0.58%  runtime.memmove
+     0.37s  0.54% 87.99%      0.50s  0.73%  runtime.findObject
+     0.35s  0.51% 88.50%      6.09s  8.84%  runtime.mallocgc
+     0.15s  0.22% 88.71%      5.56s  8.07%  math/big.nat.divRecursiveStep
+     0.14s   0.2% 88.92%      0.53s  0.77%  runtime.(*mheap).allocSpan
+     0.10s  0.15% 89.06%     52.27s 75.83%  math/big.nat.expNN
+     0.10s  0.15% 89.21%      1.80s  2.61%  math/big.nat.mul
+     0.08s  0.12% 89.32%      0.93s  1.35%  runtime.bgscavenge
+     0.07s   0.1% 89.42%     62.90s 91.25%  github.com/mattwiater/golangchannels/jobs/piJob.Pi
+     0.07s   0.1% 89.53%     37.74s 54.75%  math/big.karatsubaSqr
+     0.06s 0.087% 89.61%      0.48s   0.7%  runtime.gentraceback
+     0.06s 0.087% 89.70%      6.13s  8.89%  runtime.makeslice
+     0.05s 0.073% 89.77%      1.54s  2.23%  math/big.(*Float).Add
+     0.05s 0.073% 89.84%      0.40s  0.58%  runtime.(*sweepLocked).sweep
+     0.05s 0.073% 89.92%      2.83s  4.11%  runtime.gcDrain
+     0.04s 0.058% 89.98%      0.41s  0.59%  math/big.karatsubaAdd
+     0.04s 0.058% 90.03%      0.46s  0.67%  runtime.sweepone
+     0.03s 0.044% 90.08%      5.65s  8.20%  math/big.nat.make (inline)
+     0.03s 0.044% 90.12%      1.40s  2.03%  math/big.nat.mulAddWW
+     0.03s 0.044% 90.16%      0.86s  1.25%  runtime.schedule
+     0.02s 0.029% 90.19%      7.49s 10.87%  math/big.(*Float).uquo
+     0.02s 0.029% 90.22%      0.81s  1.18%  math/big.(*Float).usub
+     0.02s 0.029% 90.25%     52.29s 75.86%  math/big.(*Int).Exp
+     0.02s 0.029% 90.28%      0.62s   0.9%  math/big.fnorm
+     0.02s 0.029% 90.31%         7s 10.16%  math/big.nat.divLarge
+     0.02s 0.029% 90.34%      5.87s  8.52%  math/big.nat.divRecursive
+     0.02s 0.029% 90.37%     50.70s 73.55%  math/big.nat.sqr
+     0.02s 0.029% 90.40%      0.98s  1.42%  runtime.(*mcache).nextFree
+     0.02s 0.029% 90.43%      0.95s  1.38%  runtime.(*mcache).refill
+     0.02s 0.029% 90.45%      0.68s  0.99%  runtime.(*pageAlloc).scavenge
+     0.01s 0.015% 90.47%      1.05s  1.52%  math/big.(*Float).SetInt
+     0.01s 0.015% 90.48%      0.74s  1.07%  math/big.(*Float).uadd
+     0.01s 0.015% 90.50%      0.64s  0.93%  runtime.(*mcentral).cacheSpan
+     0.01s 0.015% 90.51%      0.59s  0.86%  runtime.(*mheap).alloc
+     0.01s 0.015% 90.53%      0.67s  0.97%  runtime.bgsweep
+     0.01s 0.015% 90.54%      0.39s  0.57%  runtime.findrunnable
+     0.01s 0.015% 90.56%      2.85s  4.13%  runtime.gcBgMarkWorker.func2
+     0.01s 0.015% 90.57%      0.57s  0.83%  runtime.goschedImpl
+     0.01s 0.015% 90.58%      0.46s  0.67%  runtime.preemptone
+     0.01s 0.015% 90.60%      7.20s 10.45%  runtime.systemstack
+     0.01s 0.015% 90.61%      0.61s  0.88%  runtime.wakep
+         0     0% 90.61%     63.06s 91.48%  github.com/mattwiater/golangchannels/jobs/piJob.Job.PiJob
+         0     0% 90.61%     63.06s 91.48%  github.com/mattwiater/golangchannels/workers.PerformJob (inline)
+         0     0% 90.61%     63.06s 91.48%  github.com/mattwiater/golangchannels/workers.Worker
+         0     0% 90.61%      7.49s 10.87%  math/big.(*Float).Quo
+         0     0% 90.61%      7.01s 10.17%  math/big.nat.div
+         0     0% 90.61%      0.69s  1.00%  math/big.nat.set (inline)
+         0     0% 90.61%      0.75s  1.09%  math/big.nat.shl
+         0     0% 90.61%      0.38s  0.55%  runtime.(*gcWork).balance
+         0     0% 90.61%      0.56s  0.81%  runtime.(*mcentral).grow
+         0     0% 90.61%      0.58s  0.84%  runtime.(*mheap).alloc.func1
+         0     0% 90.61%      0.62s   0.9%  runtime.(*pageAlloc).scavenge.func1
+         0     0% 90.61%      0.62s   0.9%  runtime.(*pageAlloc).scavengeOne
+         0     0% 90.61%      0.62s   0.9%  runtime.(*pageAlloc).scavengeOneFast
+         0     0% 90.61%      0.62s   0.9%  runtime.(*pageAlloc).scavengeRangeLocked
+         0     0% 90.61%      0.67s  0.97%  runtime.futexwakeup
+         0     0% 90.61%      1.80s  2.61%  runtime.gcAssistAlloc
+         0     0% 90.61%      1.79s  2.60%  runtime.gcAssistAlloc.func1
+         0     0% 90.61%      1.79s  2.60%  runtime.gcAssistAlloc1
+         0     0% 90.61%      3.13s  4.54%  runtime.gcBgMarkWorker
+         0     0% 90.61%      1.70s  2.47%  runtime.gcDrainN
+         0     0% 90.61%      0.68s  0.99%  runtime.gcStart
+         0     0% 90.61%      0.48s   0.7%  runtime.gcStart.func2
+         0     0% 90.61%      0.38s  0.55%  runtime.gopreempt_m
+         0     0% 90.61%      1.87s  2.71%  runtime.markroot
+         0     0% 90.61%      0.71s  1.03%  runtime.markroot.func1
+         0     0% 90.61%      1.16s  1.68%  runtime.markrootBlock
+         0     0% 90.61%      0.57s  0.83%  runtime.mcall
+         0     0% 90.61%      0.49s  0.71%  runtime.morestack
+         0     0% 90.61%      0.49s  0.71%  runtime.newstack
+         0     0% 90.61%      0.66s  0.96%  runtime.notewakeup
+         0     0% 90.61%      0.37s  0.54%  runtime.park_m
+         0     0% 90.61%      0.55s   0.8%  runtime.preemptM (inline)
+         0     0% 90.61%      0.55s   0.8%  runtime.signalM
+         0     0% 90.61%      0.51s  0.74%  runtime.startTheWorldWithSema
+         0     0% 90.61%      0.60s  0.87%  runtime.startm
+         0     0% 90.61%      0.43s  0.62%  runtime.suspendG
+         0     0% 90.61%      0.62s   0.9%  runtime.sysUnused
+```
 
 
-go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > pprof/heap_1.png
-go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > pprof/heap_8.png
-go tool pprof -png http://192.168.0.99:6060/debug/pprof/heap > pprof/heap_16.png
 
+clear && go tool pprof pprof/cpuprofile-08.out
 
-go tool pprof -png http://192.168.129.52:6060/debug/pprof/heap > pprof/heap_16.png
-
-
-curl -sK -v http://192.168.129.52:6060/debug/pprof/heap > pprof/heap.out
-go tool pprof pprof/heap.out
-
-
-curl -sK -v http://192.168.0.99:6060/debug/pprof/goroutine > pprof/goroutines-1.out
-clear && go tool pprof pprof/goroutines-1.out
-
-curl -sK -v http://192.168.0.99:6060/debug/pprof/goroutine > pprof/goroutines-2.out
-clear && go tool pprof pprof/goroutines-2.out
-
-curl -sK -v http://192.168.0.99:6060/debug/pprof/goroutine > pprof/goroutines-8.out
-clear && go tool pprof pprof/goroutines-8.out
-
-curl -sK -v http://192.168.0.99:6060/debug/pprof/goroutine > pprof/goroutines-16.out
-clear && go tool pprof pprof/goroutines-16.out
-
-
-curl http://192.168.0.99:6060/debug/pprof/trace?seconds=5 > pprof/trace-1.out
-go tool trace -http=':8081' trace pprof/trace-1.out
-
-curl http://192.168.0.99:6060/debug/pprof/trace?seconds=5 > pprof/trace-8.out
-go tool trace -http=':8082' trace pprof/trace-8.out
-
-curl http://192.168.0.99:6060/debug/pprof/trace?seconds=10 > pprof/trace-15.out
-go tool trace -http=':8081' trace pprof/trace-15.out
-
-curl http://192.168.0.99:6060/debug/pprof/trace?seconds=10 > pprof/trace-16.out
-go tool trace -http=':8082' trace pprof/trace-16.out
-
-
-
-pprof -http :8080 http://:8080/debug/pprof/goroutine
-
-
-curl http://192.168.0.99:6060/debug/pprof/profile?seconds=5 > pprof/pprof-1.out
-clear && go tool pprof pprof/pprof-1.out
-
-
-clear && go tool pprof pprof/cpu.pprof
+```
+File: dispatcher.test
+Type: cpu
+Time: Apr 12, 2023 at 12:56pm (PDT)
+Duration: 18s, Total samples = 96.72s (537.40%)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof) top1000
+Showing nodes accounting for 87.25s, 90.21% of 96.72s total
+Dropped 302 nodes (cum <= 0.48s)
+      flat  flat%   sum%        cum   cum%
+    49.58s 51.26% 51.26%     49.58s 51.26%  math/big.addMulVVW
+     5.31s  5.49% 56.75%      5.31s  5.49%  runtime.memclrNoHeapPointers
+     4.22s  4.36% 61.11%     56.89s 58.82%  math/big.basicSqr
+     4.17s  4.31% 65.43%      4.17s  4.31%  runtime.madvise
+     3.33s  3.44% 68.87%      3.33s  3.44%  math/big.mulAddVWW
+     2.86s  2.96% 71.83%      2.86s  2.96%  runtime.procyield
+     2.25s  2.33% 74.15%      2.25s  2.33%  math/big.subVV
+     1.95s  2.02% 76.17%      1.95s  2.02%  math/big.shlVU
+     1.95s  2.02% 78.18%      1.95s  2.02%  runtime.tgkill
+     1.31s  1.35% 79.54%      1.31s  1.35%  math/big.addVV
+     1.15s  1.19% 80.73%      2.32s  2.40%  runtime.scanobject
+     0.96s  0.99% 81.72%      1.06s  1.10%  math/big.nat.norm (inline)
+     0.95s  0.98% 82.70%      0.95s  0.98%  runtime.futex
+     0.89s  0.92% 83.62%      0.91s  0.94%  runtime.asyncPreempt
+     0.61s  0.63% 84.25%      5.79s  5.99%  math/big.nat.divBasic
+     0.60s  0.62% 84.87%      0.60s  0.62%  runtime.memmove
+     0.56s  0.58% 85.45%     11.82s 12.22%  runtime.mallocgc
+     0.55s  0.57% 86.02%      0.74s  0.77%  runtime.findObject
+     0.36s  0.37% 86.39%      0.59s  0.61%  runtime.(*spanSet).push
+     0.34s  0.35% 86.75%      1.13s  1.17%  runtime.(*mheap).allocSpan
+     0.29s   0.3% 87.05%      2.77s  2.86%  runtime.lock2
+     0.26s  0.27% 87.31%      1.01s  1.04%  math/big.getNat
+     0.23s  0.24% 87.55%      0.82s  0.85%  sync.(*Pool).Put
+     0.18s  0.19% 87.74%     65.84s 68.07%  math/big.nat.expNN
+     0.14s  0.14% 87.88%     82.60s 85.40%  github.com/mattwiater/golangchannels/jobs/piJob.Pi
+     0.14s  0.14% 88.03%      7.33s  7.58%  math/big.nat.divRecursiveStep
+     0.14s  0.14% 88.17%      0.79s  0.82%  runtime.gentraceback
+     0.13s  0.13% 88.31%      2.67s  2.76%  math/big.nat.mul
+     0.13s  0.13% 88.44%      2.04s  2.11%  runtime.sweepone
+     0.12s  0.12% 88.56%      3.17s  3.28%  runtime.(*mcentral).cacheSpan
+     0.12s  0.12% 88.69%      1.83s  1.89%  runtime.(*sweepLocked).sweep
+     0.11s  0.11% 88.80%      3.77s  3.90%  runtime.(*mcache).refill
+     0.11s  0.11% 88.92%      0.54s  0.56%  sync.(*Pool).Get
+     0.09s 0.093% 89.01%      1.58s  1.63%  math/big.(*Float).uadd
+     0.09s 0.093% 89.10%     45.48s 47.02%  math/big.karatsubaSqr
+     0.09s 0.093% 89.20%     63.66s 65.82%  math/big.nat.sqr
+     0.08s 0.083% 89.28%      1.68s  1.74%  runtime.schedule
+     0.05s 0.052% 89.33%      4.18s  4.32%  runtime.gcDrain
+     0.05s 0.052% 89.38%      2.85s  2.95%  runtime.newstack
+     0.04s 0.041% 89.42%      3.04s  3.14%  math/big.(*Float).Add
+     0.04s 0.041% 89.46%     65.90s 68.13%  math/big.(*Int).Exp
+     0.04s 0.041% 89.51%     10.77s 11.14%  math/big.nat.make (inline)
+     0.04s 0.041% 89.55%      1.99s  2.06%  math/big.nat.mulAddWW
+     0.04s 0.041% 89.59%     11.75s 12.15%  runtime.makeslice
+     0.04s 0.041% 89.63%      2.71s  2.80%  runtime.morestack
+     0.03s 0.031% 89.66%      2.22s  2.30%  math/big.(*Float).SetInt
+     0.03s 0.031% 89.69%      0.62s  0.64%  math/big.karatsubaAdd
+     0.03s 0.031% 89.72%      9.45s  9.77%  math/big.nat.div
+     0.03s 0.031% 89.75%      2.14s  2.21%  math/big.nat.shl
+     0.03s 0.031% 89.78%     13.89s 14.36%  runtime.systemstack
+     0.02s 0.021% 89.81%     10.29s 10.64%  math/big.(*Float).Quo
+     0.02s 0.021% 89.83%     10.27s 10.62%  math/big.(*Float).uquo
+     0.02s 0.021% 89.85%      1.73s  1.79%  math/big.(*Float).usub
+     0.02s 0.021% 89.87%      0.73s  0.75%  math/big.fnorm
+     0.02s 0.021% 89.89%      0.85s  0.88%  math/big.putNat (inline)
+     0.02s 0.021% 89.91%      4.25s  4.39%  runtime.bgscavenge
+     0.02s 0.021% 89.93%      1.26s  1.30%  runtime.forEachP
+     0.02s 0.021% 89.95%      5.79s  5.99%  runtime.gcBgMarkWorker
+     0.02s 0.021% 89.97%      0.69s  0.71%  runtime.gcDrainN
+     0.02s 0.021% 89.99%      2.80s  2.89%  runtime.lock (inline)
+     0.01s  0.01% 90.00%      0.54s  0.56%  math/big.nat.clear (inline)
+     0.01s  0.01% 90.01%      9.41s  9.73%  math/big.nat.divLarge
+     0.01s  0.01% 90.02%      7.98s  8.25%  math/big.nat.divRecursive
+     0.01s  0.01% 90.03%      3.79s  3.92%  runtime.(*mcache).nextFree
+     0.01s  0.01% 90.04%      1.21s  1.25%  runtime.(*mcentral).grow
+     0.01s  0.01% 90.05%      0.60s  0.62%  runtime.(*mcentral).uncacheSpan
+     0.01s  0.01% 90.06%      1.22s  1.26%  runtime.(*mheap).alloc
+     0.01s  0.01% 90.07%      1.20s  1.24%  runtime.(*mheap).alloc.func1
+     0.01s  0.01% 90.08%      1.17s  1.21%  runtime.(*mheap).freeSpan.func1
+     0.01s  0.01% 90.10%      4.16s  4.30%  runtime.(*pageAlloc).scavengeOneFast
+     0.01s  0.01% 90.11%      0.78s  0.81%  runtime.gcAssistAlloc
+     0.01s  0.01% 90.12%      0.71s  0.73%  runtime.gcAssistAlloc1
+     0.01s  0.01% 90.13%      0.55s  0.57%  runtime.gcstopm
+     0.01s  0.01% 90.14%      2.64s  2.73%  runtime.gopreempt_m
+     0.01s  0.01% 90.15%      2.78s  2.87%  runtime.lockWithRank
+     0.01s  0.01% 90.16%      0.53s  0.55%  runtime.park_m
+     0.01s  0.01% 90.17%      2.01s  2.08%  runtime.preemptM (inline)
+     0.01s  0.01% 90.18%      1.61s  1.66%  runtime.preemptone
+     0.01s  0.01% 90.19%         2s  2.07%  runtime.signalM
+     0.01s  0.01% 90.20%      0.56s  0.58%  runtime.stopTheWorldWithSema
+     0.01s  0.01% 90.21%      1.02s  1.05%  runtime.suspendG
+         0     0% 90.21%     82.73s 85.54%  github.com/mattwiater/golangchannels/jobs/piJob.Job.PiJob
+         0     0% 90.21%     82.73s 85.54%  github.com/mattwiater/golangchannels/workers.PerformJob (inline)
+         0     0% 90.21%     82.73s 85.54%  github.com/mattwiater/golangchannels/workers.Worker
+         0     0% 90.21%      1.64s  1.70%  math/big.nat.set (inline)
+         0     0% 90.21%      1.17s  1.21%  runtime.(*mheap).freeSpan
+         0     0% 90.21%      4.23s  4.37%  runtime.(*pageAlloc).scavenge
+         0     0% 90.21%      4.19s  4.33%  runtime.(*pageAlloc).scavenge.func1
+         0     0% 90.21%      4.19s  4.33%  runtime.(*pageAlloc).scavengeOne
+         0     0% 90.21%      4.18s  4.32%  runtime.(*pageAlloc).scavengeRangeLocked
+         0     0% 90.21%      1.64s  1.70%  runtime.deductSweepCredit
+         0     0% 90.21%      0.74s  0.77%  runtime.futexwakeup
+         0     0% 90.21%      0.71s  0.73%  runtime.gcAssistAlloc.func1
+         0     0% 90.21%      4.18s  4.32%  runtime.gcBgMarkWorker.func2
+         0     0% 90.21%      1.65s  1.71%  runtime.gcMarkDone
+         0     0% 90.21%      0.88s  0.91%  runtime.gcMarkDone.func1
+         0     0% 90.21%      0.49s  0.51%  runtime.gcMarkTermination
+         0     0% 90.21%      0.54s  0.56%  runtime.gcStart
+         0     0% 90.21%      2.74s  2.83%  runtime.goschedImpl
+         0     0% 90.21%      2.03s  2.10%  runtime.markroot
+         0     0% 90.21%      1.68s  1.74%  runtime.markroot.func1
+         0     0% 90.21%      0.68s   0.7%  runtime.mcall
+         0     0% 90.21%      0.56s  0.58%  runtime.notewakeup
+         0     0% 90.21%      1.37s  1.42%  runtime.preemptall
+         0     0% 90.21%      0.66s  0.68%  runtime.scanstack
+         0     0% 90.21%      4.17s  4.31%  runtime.sysUnused
+```

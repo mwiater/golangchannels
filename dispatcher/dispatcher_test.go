@@ -1,25 +1,28 @@
 package dispatcher_test
 
 import (
+	"flag"
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/mattwiater/golangchannels/dispatcher"
 )
 
-var table = []struct {
-	workerCount int
-}{
-	{workerCount: 1},
-	{workerCount: 2},
-	{workerCount: 4},
-	{workerCount: 8},
-}
+var startingWorkerCountString = flag.String("startingWorkerCount", "", "startingWorkerCount")
+var maxWorkerCountString = flag.String("maxWorkerCount", "", "maxWorkerCount")
+var jobCountString = flag.String("jobCount", "", "jobCount")
 
 func BenchmarkRun(b *testing.B) {
-	for _, v := range table {
-		b.Run(fmt.Sprintf("Worker Count: %d", v.workerCount), func(b *testing.B) {
-			dispatcher.Run(1, v.workerCount, 16)
+	startingWorkerCount, _ := strconv.Atoi(*startingWorkerCountString)
+	maxWorkerCount, _ := strconv.Atoi(*maxWorkerCountString)
+	jobCount, _ := strconv.Atoi(*jobCountString)
+
+	for i := startingWorkerCount; i <= maxWorkerCount; i++ {
+		b.Run(fmt.Sprintf("Worker Count: %d", startingWorkerCount), func(b *testing.B) {
+			fmt.Println("startingWorkerCount:", startingWorkerCount, "maxWorkerCount:", maxWorkerCount, "jobCount:", jobCount)
+			dispatcher.Run(startingWorkerCount, maxWorkerCount, jobCount)
+			startingWorkerCount++
 		})
 	}
 }

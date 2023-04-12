@@ -4,6 +4,7 @@ package workers
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strings"
 	"sync"
 	"time"
@@ -11,7 +12,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattwiater/golangchannels/common"
 	"github.com/mattwiater/golangchannels/config"
-	"github.com/mattwiater/golangchannels/jobs/emptySleepJob"
+	PiJob "github.com/mattwiater/golangchannels/jobs/piJob"
 	"github.com/mattwiater/golangchannels/structs"
 )
 
@@ -20,33 +21,36 @@ type JobResult = structs.JobResult
 type WorkerStat = structs.WorkerStat
 
 var jobs = make(chan Job, config.TotalJobCount)
-var jobResults = make(chan JobResult, config.TotalJobCount)
-var jobData []JobResult
+var jobResultsChannel = make(chan JobResult, config.TotalJobCount)
+var JobResults []JobResult
 
 var workersElapsedTime float64
 var JobNumber int
 var WorkerStats []WorkerStat
 
-func WorkerResult(done chan bool) {
-	for jobResult := range jobResults {
+func WorkerResult(done chan []structs.JobResult) {
+	for jobResult := range jobResultsChannel {
 		jobResultMap := map[string]string{}
 		json.Unmarshal([]byte(jobResult.Status), &jobResultMap)
 
-		jobData = append(jobData, jobResult)
+		JobResults = append(JobResults, jobResult)
 
 		if config.Debug {
 			col1 := fmt.Sprintf("    -> JOB %v/%v COMPLETED:", jobResult.Job.JobNumber, jobResult.NumberOfJobs)
 			colWidth := common.ConsoleColumnWidth(col1, 35)
 			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %v Seconds)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.Job.Id, jobResult.WorkerID, jobResult.JobName, jobResult.JobTimer)
 		}
-
 	}
-	done <- true
+
+	done <- JobResults
 }
 
 func PerformJob(job Job) (string, float64) {
-	myJob := emptySleepJob.Job(job)
-	var result, jobTimer = myJob.EmptySleepJob()
+	myJob := PiJob.Job(job)
+	var result, jobTimer = myJob.PiJob()
+
+	// myJob := emptySleepJob.Job(job)
+	// var result, jobTimer = myJob.EmptySleepJob()
 
 	return result, jobTimer
 }
@@ -67,7 +71,7 @@ func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
 	}
 	wg.Wait()
 
-	close(jobResults)
+	close(jobResultsChannel)
 }
 
 func AllocateJob(noOfJobs int) {
@@ -81,19 +85,19 @@ func AllocateJob(noOfJobs int) {
 			config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuid)
 		}
 
-		job := Job{JobNumber: JobNumber, Id: uuid, JobName: "emptySleepJob"}
+		job := Job{JobNumber: JobNumber, Id: uuid, JobName: "piJob"}
 		jobs <- job
 	}
 
 	close(jobs)
 }
 
-func Workers(workerCount int, jobCount int, jobName string) float64 {
+func Workers(workerCount int, jobCount int, jobName string) (float64, float64) {
 	// Jobs to run for each iteration
 	// Need to reassign in this closure
 	jobCount = jobCount
 	jobs = make(chan Job, jobCount)
-	jobResults = make(chan JobResult, jobCount)
+	jobResultsChannel = make(chan JobResult, jobCount)
 
 	startTime := time.Now()
 	numberOfJobs := jobCount
@@ -128,11 +132,20 @@ func Workers(workerCount int, jobCount int, jobName string) float64 {
 	}
 
 	go AllocateJob(numberOfJobs)
-	done := make(chan bool)
-	go WorkerResult(done)
+	jobResults := make(chan []structs.JobResult)
+	go WorkerResult(jobResults)
 
 	CreateWorkerPool(workerCount, numberOfJobs)
-	<-done
+	allJobResults := <-jobResults
+
+	jobElapsedSum := 0.0
+	for _, allJobResult := range allJobResults {
+		jobTime := getAttr(&allJobResult, "JobTimer")
+		jobTimeFloat := jobTime.Interface().(float64)
+		jobElapsedSum += (jobTimeFloat)
+	}
+
+	jobElapsedAvg := (float64(jobElapsedSum)) / (float64(numberOfJobs))
 
 	endTime := time.Now()
 	diff := endTime.Sub(startTime)
@@ -150,7 +163,20 @@ func Workers(workerCount int, jobCount int, jobName string) float64 {
 	}
 
 	workersElapsedTime = diff.Seconds()
-	return float64(workersElapsedTime)
+	return float64(workersElapsedTime), jobElapsedAvg
+}
+
+func getAttr(obj interface{}, fieldName string) reflect.Value {
+	pointToStruct := reflect.ValueOf(obj) // addressable
+	curStruct := pointToStruct.Elem()
+	if curStruct.Kind() != reflect.Struct {
+		panic("not struct")
+	}
+	curField := curStruct.FieldByName(fieldName) // type: reflect.Value
+	if !curField.IsValid() {
+		panic("not found:" + fieldName)
+	}
+	return curField
 }
 
 func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
@@ -163,7 +189,7 @@ func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 
 		var jobResult, jobTimer = PerformJob(job)
 		output := JobResult{WorkerID: workerID, Job: job, NumberOfJobs: noOfJobs, JobTimer: jobTimer, JobName: job.JobName, Status: jobResult}
-		jobResults <- output
+		jobResultsChannel <- output
 	}
 	wg.Done()
 }

@@ -36,7 +36,7 @@ func AppConfig() (map[string]string, error) {
 
 		if keyValuePair[0] == "DEBUG" {
 			if keyValuePair[1] == "" {
-				Debug = true
+				Debug = false
 			} else {
 				Debug, _ = strconv.ParseBool(keyValuePair[1])
 			}
