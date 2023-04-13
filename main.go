@@ -71,7 +71,7 @@ func main() {
 	dispatcher.Run(config.StartingWorkerCount, config.MaxWorkerCount, config.TotalJobCount)
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Number of Workers", "Number of Jobs", "Average Job Execution Time", "Total Worker Execution Time", "Speed Increase"})
+	table.SetHeader([]string{"Num Workers", "Num Jobs", "Avg Job Time", "Tot Worker Time", "+/-"})
 
 	for i, stat := range workers.WorkerStats {
 		currentStatJobElapsedAverage := stat.JobElapsedAverage
@@ -83,7 +83,7 @@ func main() {
 		jobExecutionAverage := fmt.Sprintf("%f", currentStatJobElapsedAverage)
 		workerExecutionTime := fmt.Sprintf("%f", currentStatExecutionTime)
 
-		speedIncrease := "(baseline)"
+		speedIncrease := "(1x)"
 
 		if i < len(workers.WorkerStats) && i > int(0) {
 			if baselineExecutionTime > currentStatExecutionTime {
