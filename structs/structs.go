@@ -23,18 +23,10 @@ type JobResult struct {
 
 type WorkerStat struct {
 	Workers           int
+	JobName           string
 	ExecutionTime     float64
 	JobElapsedAverage float64
 	Data              string
-}
-
-type WeaselsJobResult struct {
-	Target      string
-	InitialSeed string
-	Generations string
-	Status      string
-	Elapsed     string
-	Data        string
 }
 
 type SleepJobResult struct {

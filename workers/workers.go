@@ -12,6 +12,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattwiater/golangchannels/common"
 	"github.com/mattwiater/golangchannels/config"
+
+	//"github.com/mattwiater/golangchannels/jobs/emptySleepJob"
 	PiJob "github.com/mattwiater/golangchannels/jobs/piJob"
 	"github.com/mattwiater/golangchannels/structs"
 )
@@ -74,7 +76,7 @@ func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
 	close(jobResultsChannel)
 }
 
-func AllocateJob(noOfJobs int) {
+func AllocateJob(jobName string, noOfJobs int) {
 	for i := 0; i < noOfJobs; i++ {
 		uuid := uuid.New()
 		JobNumber := i + 1
@@ -85,7 +87,7 @@ func AllocateJob(noOfJobs int) {
 			config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuid)
 		}
 
-		job := Job{JobNumber: JobNumber, Id: uuid, JobName: "piJob"}
+		job := Job{JobNumber: JobNumber, Id: uuid, JobName: jobName}
 		jobs <- job
 	}
 
@@ -131,7 +133,7 @@ func Workers(workerCount int, jobCount int, jobName string) (float64, float64) {
 		fmt.Println()
 	}
 
-	go AllocateJob(numberOfJobs)
+	go AllocateJob(jobName, numberOfJobs)
 	jobResults := make(chan []structs.JobResult)
 	go WorkerResult(jobResults)
 

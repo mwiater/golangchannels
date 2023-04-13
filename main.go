@@ -68,10 +68,12 @@ func main() {
 		os.Exit(0)
 	}()
 
-	dispatcher.Run(config.StartingWorkerCount, config.MaxWorkerCount, config.TotalJobCount)
+	jobName := "PiJob"
+
+	dispatcher.Run(jobName, config.StartingWorkerCount, config.MaxWorkerCount, config.TotalJobCount)
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Num Workers", "Num Jobs", "Avg Job Time", "Tot Worker Time", "+/-"})
+	table.SetHeader([]string{"Workers", "Jobs", "Avg Job Time", "Total Proc Time", "+/-"})
 
 	for i, stat := range workers.WorkerStats {
 		currentStatJobElapsedAverage := stat.JobElapsedAverage
@@ -80,10 +82,10 @@ func main() {
 
 		workerCountString := fmt.Sprintf("%v", stat.Workers)
 		jobsCountString := fmt.Sprintf("%v", config.TotalJobCount)
-		jobExecutionAverage := fmt.Sprintf("%f", currentStatJobElapsedAverage)
-		workerExecutionTime := fmt.Sprintf("%f", currentStatExecutionTime)
+		jobExecutionAverage := fmt.Sprintf("%fs", currentStatJobElapsedAverage)
+		workerExecutionTime := fmt.Sprintf("%fs", currentStatExecutionTime)
 
-		speedIncrease := "(1x)"
+		speedIncrease := "(1x)*"
 
 		if i < len(workers.WorkerStats) && i > int(0) {
 			if baselineExecutionTime > currentStatExecutionTime {
@@ -97,6 +99,11 @@ func main() {
 		table.Append([]string{workerCountString, jobsCountString, jobExecutionAverage, workerExecutionTime, speedIncrease})
 	}
 
-	fmt.Println("\nSummary:")
+	fmt.Println()
+	fmt.Println("\nSummary Results:", jobName)
 	table.Render()
+
+	fmt.Println()
+	fmt.Println("* Baseline: All subsequent +/- tests are compared to this.")
+	fmt.Println()
 }

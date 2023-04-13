@@ -9,7 +9,7 @@ import (
 	"github.com/mattwiater/golangchannels/workers"
 )
 
-func Run(startingWorkerCount int, maxWorkerCount int, totalJobCount int) {
+func Run(jobName string, startingWorkerCount int, maxWorkerCount int, totalJobCount int) {
 	testCount := 1
 	for i := startingWorkerCount; i <= maxWorkerCount; i++ {
 		currentWorkers := i
@@ -24,8 +24,8 @@ func Run(startingWorkerCount int, maxWorkerCount int, totalJobCount int) {
 			fmt.Println()
 		}
 
-		workerElapsed, jobElapsedAverage := workers.Workers(currentWorkers, totalJobCount, "piJob")
-		workers.WorkerStats = append(workers.WorkerStats, workers.WorkerStat{Workers: currentWorkers, ExecutionTime: workerElapsed, JobElapsedAverage: jobElapsedAverage})
+		workerElapsed, jobElapsedAverage := workers.Workers(currentWorkers, totalJobCount, jobName)
+		workers.WorkerStats = append(workers.WorkerStats, workers.WorkerStat{Workers: currentWorkers, JobName: jobName, ExecutionTime: workerElapsed, JobElapsedAverage: jobElapsedAverage})
 
 		testCount++
 	}
