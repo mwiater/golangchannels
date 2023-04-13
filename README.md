@@ -288,11 +288,14 @@ List available commands: `make`
 ```
 Targets in this Makefile:
 
+make golang-benchmark
 make golang-build
 make golang-godoc
 make golang-lint
+make golang-pprof
 make golang-run
 make golang-test
+
 
 For details on these commands, see the bash scripts in the 'scripts/' directory.
 ```
@@ -307,7 +310,7 @@ For details on these commands, see the bash scripts in the 'scripts/' directory.
 
 ## Benchmark Tests
 
-Results of running the application: 8 Iterations, starting with 1 Worker, ending with 8 Workers, all processing 64 of the same job (PiJob)
+Results of running the application (`make golang-run`): 8 Iterations, starting with 1 Worker, ending with 8 Workers, all processing 64 of the same job (PiJob)
 
 ```
 Summary:
@@ -325,7 +328,7 @@ Summary:
 +-------------------+----------------+----------------------------+-----------------------------+----------------+
 ```
 
-### Results of the benchmarks:
+### Results of the benchmarks (`make golang-benchmark`):
 
 The following is a lot of commands and benchmark output. The idea here is that the output roughly matches the timing of runing the application. As there is a small variability in how long it takes the jobs to execute--usually much less than a second--the numbers won't be exact. The following is simply confirmation that we're getting the results that we expect.
 

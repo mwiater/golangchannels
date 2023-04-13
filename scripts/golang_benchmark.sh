@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# From root of project, run: `bash scripts/golang_test.sh`
+# From root of project, run: `bash scripts/golang_benchmark.sh`
 
 clear
 
@@ -24,7 +24,7 @@ echo -e "${GREENBOLD}...Complete.${RESET}"
 echo ""
 
 echo -e "${CYANBOLD}Running benchmarks...${RESET}"
-go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^#
+go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=8 -maxWorkerCount=8 -jobCount=16
 status=$?
 if test $status -ne 0
 then

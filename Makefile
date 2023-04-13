@@ -35,3 +35,6 @@ golang-lint:
 
 golang-godoc:
 	scripts/golang_godoc.sh
+
+golang-pprof:
+	scripts/golang_pprof.sh
