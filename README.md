@@ -328,9 +328,11 @@ Summary:
 +-------------------+----------------+----------------------------+-----------------------------+----------------+
 ```
 
+
+
 ### Results of the benchmarks (`make golang-benchmark`):
 
-The following is a lot of commands and benchmark output. The idea here is that the output roughly matches the timing of runing the application. As there is a small variability in how long it takes the jobs to execute--usually much less than a second--the numbers won't be exact. The following is simply confirmation that we're getting the results that we expect.
+The following is a lot of commands and benchmark output. The idea here is that the output roughly matches the timing of running the application. As there is a small variability in how long it takes the jobs to execute--usually much less than a second--the numbers won't be exact. The following is simply confirmation that we're getting the results that we expect.
 
 The following tests were run on:
 
