@@ -245,16 +245,18 @@ Below are the results for running 64 workers, or `runtime.NumCPU() * 8`:
 The supplied .env file is blank by default, and should run properly without making changes:
 
 ```
+DEBUG=
 STARTINGWORKERCOUNT=
 MAXWORKERCOUNT=
 TOTALJOBCOUNT=
-PPROF=
+PPROF=false
 PPROFIP=
 PPROFPORT=
 ```
 
 The defaults are listed below when no values are set. **To override any/all, just set the env vars below.**
 
+**DEBUG:** More verbose console output, default is `false`
 **STARTINGWORKERCOUNT:** By default this will be set to `1`
 **MAXWORKERCOUNT:** By default this will be set to `runtime.NumCPU()`
 **TOTALJOBCOUNT:** By default this will be set to `runtime.NumCPU()*2`
@@ -323,105 +325,93 @@ Summary:
 +-------------------+----------------+----------------------------+-----------------------------+----------------+
 ```
 
-Results of the benchmarks:
+### Results of the benchmarks:
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-01.out -memprofile ./pprof/memprofile-01.out -memprofile ./pprof/memprofile-01.out -blockprofile ./pprof/blockprofile-01.out -mutexprofile ./pprof/mutexprofile-01.out -args -startingWorkerCount=1 -maxWorkerCount=1 -jobCount=64` #=>
+The following is a lot of commands and benchmark output. The idea here is that the output roughly matches the timing of runing the application. As there is a small variability in how long it takes the jobs to execute--usually much less than a second--the numbers won't be exact. The following is simply confirmation that we're getting the results that we expect.
+
+The following tests were run on:
 
 ```
-startingWorkerCount: 1 maxWorkerCount: 1 jobCount: 64
 goos: linux
 goarch: amd64
 cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+```
+
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=1 -maxWorkerCount=1 -jobCount=64` #=>
+
+```
+startingWorkerCount: 1 maxWorkerCount: 1 jobCount: 64
 BenchmarkRun/Worker_Count:_1-8                 1        64292688948 ns/op       35976337824 B/op        23511673 allocs/op
 PASS
 ok      command-line-arguments  64.467s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-02.out -memprofile ./pprof/memprofile-02.out -memprofile ./pprof/memprofile-02.out -blockprofile ./pprof/blockprofile-02.out -mutexprofile ./pprof/mutexprofile-02.out -args -startingWorkerCount=2 -maxWorkerCount=2 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=2 -maxWorkerCount=2 -jobCount=64` #=>
 
 ```
 startingWorkerCount: 2 maxWorkerCount: 2 jobCount: 64
-goos: linux
-goarch: amd64
-cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
 BenchmarkRun/Worker_Count:_2-8                 1        38487971462 ns/op       36086760640 B/op        23605364 allocs/op
 PASS
 ok      command-line-arguments  38.683s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-03.out -memprofile ./pprof/memprofile-03.out -memprofile ./pprof/memprofile-03.out -blockprofile ./pprof/blockprofile-03.out -mutexprofile ./pprof/mutexprofile-03.out -args -startingWorkerCount=3 -maxWorkerCount=3 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=3 -maxWorkerCount=3 -jobCount=64` #=>
 
 ```
 startingWorkerCount: 3 maxWorkerCount: 3 jobCount: 64
-goos: linux
-goarch: amd64
-cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
 BenchmarkRun/Worker_Count:_3-8                 1        31649478509 ns/op       36098221112 B/op        23631627 allocs/op
 PASS
 ok      command-line-arguments  31.873s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-04.out -memprofile ./pprof/memprofile-04.out -memprofile ./pprof/memprofile-04.out -blockprofile ./pprof/blockprofile-04.out -mutexprofile ./pprof/mutexprofile-04.out -args -startingWorkerCount=4 -maxWorkerCount=4 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=4 -maxWorkerCount=4 -jobCount=64` #=>
 
 ```
 startingWorkerCount: 4 maxWorkerCount: 4 jobCount: 64
-goos: linux
-goarch: amd64
-cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
 BenchmarkRun/Worker_Count:_4-8                 1        25412844723 ns/op       36074032056 B/op        23617726 allocs/op
 PASS
 ok      command-line-arguments  25.625s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-05.out -memprofile ./pprof/memprofile-05.out -memprofile ./pprof/memprofile-05.out -blockprofile ./pprof/blockprofile-05.out -mutexprofile ./pprof/mutexprofile-05.out -args -startingWorkerCount=5 -maxWorkerCount=5 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=5 -maxWorkerCount=5 -jobCount=64` #=>
 
 ```
 startingWorkerCount: 5 maxWorkerCount: 5 jobCount: 64
-goos: linux
-goarch: amd64
-cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
 BenchmarkRun/Worker_Count:_5-8                 1        20767157101 ns/op       36104025472 B/op        23640474 allocs/op
 PASS
 ok      command-line-arguments  20.914s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-06.out -memprofile ./pprof/memprofile-06.out -memprofile ./pprof/memprofile-06.out -blockprofile ./pprof/blockprofile-06.out -mutexprofile ./pprof/mutexprofile-06.out -args -startingWorkerCount=6 -maxWorkerCount=6 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=6 -maxWorkerCount=6 -jobCount=64` #=>
 
 ```
 startingWorkerCount: 6 maxWorkerCount: 6 jobCount: 64
-goos: linux
-goarch: amd64
-cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
 BenchmarkRun/Worker_Count:_6-8                 1        18937268938 ns/op       36135256720 B/op        23655645 allocs/op
 PASS
 ok      command-line-arguments  19.092s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-07.out -memprofile ./pprof/memprofile-07.out -memprofile ./pprof/memprofile-07.out -blockprofile ./pprof/blockprofile-07.out -mutexprofile ./pprof/mutexprofile-07.out -args -startingWorkerCount=7 -maxWorkerCount=7 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=7 -maxWorkerCount=7 -jobCount=64` #=>
 
 ```
 startingWorkerCount: 7 maxWorkerCount: 7 jobCount: 64
-goos: linux
-goarch: amd64
-cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
 BenchmarkRun/Worker_Count:_7-8                 1        18182033241 ns/op       36135543352 B/op        23654627 allocs/op
 PASS
 ok      command-line-arguments  18.386s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-08.out -memprofile ./pprof/memprofile-08.out -memprofile ./pprof/memprofile-08.out -blockprofile ./pprof/blockprofile-08.out -mutexprofile ./pprof/mutexprofile-08.out -args -startingWorkerCount=8 -maxWorkerCount=8 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=8 -maxWorkerCount=8 -jobCount=64` #=>
 
 ```
 startingWorkerCount: 8 maxWorkerCount: 8 jobCount: 64
-goos: linux
-goarch: amd64
-cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
 BenchmarkRun/Worker_Count:_8-8                 1        17796937403 ns/op       36178650928 B/op        23679568 allocs/op
 PASS
 ok      command-line-arguments  18.024s
 ```
 
-Comparing CPU profiles via pperf:
+---
+
+# Comparing CPU profiles via pperf:
 
 clear && go tool pprof pprof/cpuprofile-01.out
 
