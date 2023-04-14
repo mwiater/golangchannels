@@ -141,14 +141,14 @@ func Workers(workerCount int, jobCount int, jobName string) (float64, float64) {
 	allJobResults := <-jobResults
 
 	jobElapsedSum := 0.0
-	for _, allJobResult := range allJobResults {
+	for _, allJobResult := range allJobResults[(len(allJobResults) - numberOfJobs):] { // iterate over desired rows
 		jobTime := getAttr(&allJobResult, "JobTimer")
 		jobTimeFloat := jobTime.Interface().(float64)
 		jobElapsedSum += (jobTimeFloat)
+
 	}
 
 	jobElapsedAvg := (float64(jobElapsedSum)) / (float64(numberOfJobs))
-
 	endTime := time.Now()
 	diff := endTime.Sub(startTime)
 
