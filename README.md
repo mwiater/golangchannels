@@ -342,73 +342,113 @@ goarch: amd64
 cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=1 -maxWorkerCount=1 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=1 -maxWorkerCount=1 -jobCount=64` #=>
 
 ```
-startingWorkerCount: 1 maxWorkerCount: 1 jobCount: 64
+BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       1
+  #=> Max Worker Count:            1
+  #=> Job Count:                   64
+
 BenchmarkRun/Worker_Count:_1-8                 1        64292688948 ns/op       35976337824 B/op        23511673 allocs/op
 PASS
 ok      command-line-arguments  64.467s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=2 -maxWorkerCount=2 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=2 -maxWorkerCount=2 -jobCount=64` #=>
 
 ```
-startingWorkerCount: 2 maxWorkerCount: 2 jobCount: 64
+BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       2
+  #=> Max Worker Count:            2
+  #=> Job Count:                   64
+
 BenchmarkRun/Worker_Count:_2-8                 1        38487971462 ns/op       36086760640 B/op        23605364 allocs/op
 PASS
 ok      command-line-arguments  38.683s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=3 -maxWorkerCount=3 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=3 -maxWorkerCount=3 -jobCount=64` #=>
 
 ```
-startingWorkerCount: 3 maxWorkerCount: 3 jobCount: 64
+BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       3
+  #=> Max Worker Count:            3
+  #=> Job Count:                   64
+
 BenchmarkRun/Worker_Count:_3-8                 1        31649478509 ns/op       36098221112 B/op        23631627 allocs/op
 PASS
 ok      command-line-arguments  31.873s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=4 -maxWorkerCount=4 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=4 -maxWorkerCount=4 -jobCount=64` #=>
 
 ```
-startingWorkerCount: 4 maxWorkerCount: 4 jobCount: 64
+BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       4
+  #=> Max Worker Count:            4
+  #=> Job Count:                   64
+
 BenchmarkRun/Worker_Count:_4-8                 1        25412844723 ns/op       36074032056 B/op        23617726 allocs/op
 PASS
 ok      command-line-arguments  25.625s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=5 -maxWorkerCount=5 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=5 -maxWorkerCount=5 -jobCount=64` #=>
 
 ```
-startingWorkerCount: 5 maxWorkerCount: 5 jobCount: 64
+BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       5
+  #=> Max Worker Count:            5
+  #=> Job Count:                   64
+
 BenchmarkRun/Worker_Count:_5-8                 1        20767157101 ns/op       36104025472 B/op        23640474 allocs/op
 PASS
 ok      command-line-arguments  20.914s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=6 -maxWorkerCount=6 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=6 -maxWorkerCount=6 -jobCount=64` #=>
 
 ```
-startingWorkerCount: 6 maxWorkerCount: 6 jobCount: 64
+BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       6
+  #=> Max Worker Count:            6
+  #=> Job Count:                   64
+
 BenchmarkRun/Worker_Count:_6-8                 1        18937268938 ns/op       36135256720 B/op        23655645 allocs/op
 PASS
 ok      command-line-arguments  19.092s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=7 -maxWorkerCount=7 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=7 -maxWorkerCount=7 -jobCount=64` #=>
 
 ```
-startingWorkerCount: 7 maxWorkerCount: 7 jobCount: 64
+BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       7
+  #=> Max Worker Count:            7
+  #=> Job Count:                   64
+
 BenchmarkRun/Worker_Count:_7-8                 1        18182033241 ns/op       36135543352 B/op        23654627 allocs/op
 PASS
 ok      command-line-arguments  18.386s
 ```
 
-`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=8 -maxWorkerCount=8 -jobCount=64` #=>
+`go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=8 -maxWorkerCount=8 -jobCount=64` #=>
 
 ```
-startingWorkerCount: 8 maxWorkerCount: 8 jobCount: 64
+BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       8
+  #=> Max Worker Count:            8
+  #=> Job Count:                   64
+
 BenchmarkRun/Worker_Count:_8-8                 1        17796937403 ns/op       36178650928 B/op        23679568 allocs/op
 PASS
 ok      command-line-arguments  18.024s

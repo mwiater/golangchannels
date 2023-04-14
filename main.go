@@ -38,6 +38,8 @@ func main() {
 		log.Fatal("Error: config.AppConfig()")
 	}
 
+	jobName := config.JobName
+
 	if cfg["PPROF"] == "true" {
 		pprofAddress := ""
 		if cfg["PPROFIP"] == "" {
@@ -67,8 +69,6 @@ func main() {
 		fmt.Println("\nShutting down.")
 		os.Exit(0)
 	}()
-
-	jobName := "PiJob"
 
 	dispatcher.Run(jobName, config.StartingWorkerCount, config.MaxWorkerCount, config.TotalJobCount)
 

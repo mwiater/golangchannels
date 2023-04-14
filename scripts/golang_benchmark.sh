@@ -24,7 +24,7 @@ echo -e "${GREENBOLD}...Complete.${RESET}"
 echo ""
 
 echo -e "${CYANBOLD}Running benchmarks...${RESET}"
-go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -startingWorkerCount=8 -maxWorkerCount=8 -jobCount=16
+go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -args -jobName=PiJob -startingWorkerCount=8 -maxWorkerCount=8 -jobCount=64
 status=$?
 if test $status -ne 0
 then

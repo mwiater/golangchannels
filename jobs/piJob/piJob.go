@@ -18,14 +18,6 @@ type Job structs.Job
 func (job Job) PiJob() (string, float64) {
 	jobStartTime := time.Now()
 
-	//rand.Seed(time.Now().UnixNano())
-	//min := 0
-	//max := 1000
-	//randNumber := rand.Intn(max-min+1) + min
-
-	//temp, _ := strconv.ParseUint("2000", 10, 32)
-	//precision := uint(temp+uint64(randNumber)) * 3
-
 	PI := Pi(10000)
 
 	jobEndTime := time.Now()

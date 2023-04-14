@@ -21,6 +21,7 @@ var ConsoleWhite = color.New(color.FgWhite)
 var EnvVarsFile embed.FS
 
 var Debug bool
+var JobName string
 var StartingWorkerCount int
 var MaxWorkerCount int
 var TotalJobCount int
@@ -39,6 +40,14 @@ func AppConfig() (map[string]string, error) {
 				Debug = false
 			} else {
 				Debug, _ = strconv.ParseBool(keyValuePair[1])
+			}
+		}
+
+		if keyValuePair[0] == "JOBNAME" {
+			if keyValuePair[1] == "" {
+				JobName = "EmptySleepJob"
+			} else {
+				JobName = keyValuePair[1]
 			}
 		}
 

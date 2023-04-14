@@ -13,8 +13,8 @@ import (
 	"github.com/mattwiater/golangchannels/common"
 	"github.com/mattwiater/golangchannels/config"
 
-	//"github.com/mattwiater/golangchannels/jobs/emptySleepJob"
-	PiJob "github.com/mattwiater/golangchannels/jobs/piJob"
+	"github.com/mattwiater/golangchannels/jobs/emptySleepJob"
+	"github.com/mattwiater/golangchannels/jobs/piJob"
 	"github.com/mattwiater/golangchannels/structs"
 )
 
@@ -47,14 +47,26 @@ func WorkerResult(done chan []structs.JobResult) {
 	done <- JobResults
 }
 
-func PerformJob(job Job) (string, float64) {
-	myJob := PiJob.Job(job)
-	var result, jobTimer = myJob.PiJob()
-
-	// myJob := emptySleepJob.Job(job)
-	// var result, jobTimer = myJob.EmptySleepJob()
-
+func PerformJob(jobName string, job Job) (string, float64) {
+	var result string
+	var jobTimer float64
+	result, jobTimer = jobRouter(jobName, job)
 	return result, jobTimer
+}
+
+func jobRouter(name string, job structs.Job) (string, float64) {
+	switch name {
+	case "EmptySleepJob":
+		myJob := emptySleepJob.Job(job)
+		result, jobTimer := myJob.EmptySleepJob()
+		return result, jobTimer
+	case "PiJob":
+		myJob := piJob.Job(job)
+		result, jobTimer := myJob.PiJob()
+		return result, jobTimer
+	default:
+		panic("Unknown function name")
+	}
 }
 
 func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
@@ -94,7 +106,7 @@ func AllocateJob(jobName string, noOfJobs int) {
 	close(jobs)
 }
 
-func Workers(workerCount int, jobCount int, jobName string) (float64, float64) {
+func Workers(jobName string, workerCount int, jobCount int) (float64, float64) {
 	// Jobs to run for each iteration
 	// Need to reassign in this closure
 	jobCount = jobCount
@@ -189,7 +201,7 @@ func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 			config.ConsoleCyan.Printf("  JOB %v/%v STARTED: %-*s %v with Worker: %v\n", job.JobNumber, config.TotalJobCount, colWidth, "", job.Id, workerID)
 		}
 
-		var jobResult, jobTimer = PerformJob(job)
+		var jobResult, jobTimer = PerformJob(job.JobName, job)
 		output := JobResult{WorkerID: workerID, Job: job, NumberOfJobs: noOfJobs, JobTimer: jobTimer, JobName: job.JobName, Status: jobResult}
 		jobResultsChannel <- output
 	}
