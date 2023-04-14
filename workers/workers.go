@@ -176,7 +176,10 @@ func PerformJob(jobName string, job Job) (string, float64) {
 func WorkerResult(workerResultsChannel chan []structs.JobResult) {
 	for jobResult := range jobResultsChannel {
 		jobResultMap := map[string]string{}
-		json.Unmarshal([]byte(jobResult.Status), &jobResultMap)
+		err := json.Unmarshal([]byte(jobResult.Status), &jobResultMap)
+		if err != nil {
+			panic("Could not Unmarshal object")
+		}
 
 		JobResults = append(JobResults, jobResult)
 
