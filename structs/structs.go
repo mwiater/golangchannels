@@ -1,3 +1,4 @@
+// Package structs is used to define all of the Structs used in the application.
 package structs
 
 import (

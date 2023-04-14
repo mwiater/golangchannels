@@ -26,7 +26,7 @@ var StartingWorkerCount int
 var MaxWorkerCount int
 var TotalJobCount int
 
-// AppConfig returns a new decoded Config struct
+// AppConfig returns a new decoded Config map from .env file variables or sets from defaults
 func AppConfig() (map[string]string, error) {
 	envVars, _ := EnvVarsFile.ReadFile(".env")
 	lines := common.SplitStringLines(string(envVars))

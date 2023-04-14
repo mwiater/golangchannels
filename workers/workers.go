@@ -30,86 +30,12 @@ var workersElapsedTime float64
 var JobNumber int
 var WorkerStats []WorkerStat
 
-func WorkerResult(done chan []structs.JobResult) {
-	for jobResult := range jobResultsChannel {
-		jobResultMap := map[string]string{}
-		json.Unmarshal([]byte(jobResult.Status), &jobResultMap)
-
-		JobResults = append(JobResults, jobResult)
-
-		if config.Debug {
-			col1 := fmt.Sprintf("    -> JOB %v/%v COMPLETED:", jobResult.Job.JobNumber, jobResult.NumberOfJobs)
-			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %v Seconds)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.Job.Id, jobResult.WorkerID, jobResult.JobName, jobResult.JobTimer)
-		}
-	}
-
-	done <- JobResults
-}
-
-func PerformJob(jobName string, job Job) (string, float64) {
-	var result string
-	var jobTimer float64
-	result, jobTimer = jobRouter(jobName, job)
-	return result, jobTimer
-}
-
-func jobRouter(name string, job structs.Job) (string, float64) {
-	switch name {
-	case "EmptySleepJob":
-		myJob := emptySleepJob.Job(job)
-		result, jobTimer := myJob.EmptySleepJob()
-		return result, jobTimer
-	case "PiJob":
-		myJob := piJob.Job(job)
-		result, jobTimer := myJob.PiJob()
-		return result, jobTimer
-	default:
-		panic("Unknown function name")
-	}
-}
-
-func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
-	var wg sync.WaitGroup
-	for i := 0; i < noOfWorkers; i++ {
-		wg.Add(1)
-		uuid := uuid.New()
-
-		if config.Debug {
-			col1 := fmt.Sprintf("Allocating Worker #%v:", i+1)
-			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleGreen.Printf("Allocating Worker #%d: %-*s %v\n", i+1, colWidth, "", uuid)
-		}
-
-		go Worker(&wg, uuid, noOfJobs)
-	}
-	wg.Wait()
-
-	close(jobResultsChannel)
-}
-
-func AllocateJob(jobName string, noOfJobs int) {
-	for i := 0; i < noOfJobs; i++ {
-		uuid := uuid.New()
-		JobNumber := i + 1
-
-		if config.Debug {
-			col1 := fmt.Sprintf("  Allocating Job #%d:", JobNumber)
-			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuid)
-		}
-
-		job := Job{JobNumber: JobNumber, Id: uuid, JobName: jobName}
-		jobs <- job
-	}
-
-	close(jobs)
-}
-
+// Workers create worker pools, set up channels, and allocate and perform jobs
+// Each worker returns timing inforation back to the dispacher: total worker elapsed time for processing all jobs, average job processing time
 func Workers(jobName string, workerCount int, jobCount int) (float64, float64) {
 	// Jobs to run for each iteration
 	// Need to reassign in this closure
-	jobCount = jobCount
+	jobCount = jobCount //nolint
 	jobs = make(chan Job, jobCount)
 	jobResultsChannel = make(chan JobResult, jobCount)
 
@@ -153,7 +79,7 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64) {
 	allJobResults := <-jobResults
 
 	jobElapsedSum := 0.0
-	for _, allJobResult := range allJobResults[(len(allJobResults) - numberOfJobs):] { // iterate over desired rows
+	for _, allJobResult := range allJobResults[(len(allJobResults) - numberOfJobs):] {
 		jobTime := getAttr(&allJobResult, "JobTimer")
 		jobTimeFloat := jobTime.Interface().(float64)
 		jobElapsedSum += (jobTimeFloat)
@@ -180,19 +106,28 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64) {
 	return float64(workersElapsedTime), jobElapsedAvg
 }
 
-func getAttr(obj interface{}, fieldName string) reflect.Value {
-	pointToStruct := reflect.ValueOf(obj) // addressable
-	curStruct := pointToStruct.Elem()
-	if curStruct.Kind() != reflect.Struct {
-		panic("not struct")
+// CreateWorkerPool creates the desireed number or workers, assigns UUIDs, and create a worker pool waitgroup to synchronize workers.
+func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
+	var wg sync.WaitGroup
+	for i := 0; i < noOfWorkers; i++ {
+		wg.Add(1)
+		uuid := uuid.New()
+
+		if config.Debug {
+			col1 := fmt.Sprintf("Allocating Worker #%v:", i+1)
+			colWidth := common.ConsoleColumnWidth(col1, 35)
+			config.ConsoleGreen.Printf("Allocating Worker #%d: %-*s %v\n", i+1, colWidth, "", uuid)
+		}
+
+		go Worker(&wg, uuid, noOfJobs)
 	}
-	curField := curStruct.FieldByName(fieldName) // type: reflect.Value
-	if !curField.IsValid() {
-		panic("not found:" + fieldName)
-	}
-	return curField
+	wg.Wait()
+
+	close(jobResultsChannel)
 }
 
+// Worker recieves jobs from the jobs channel and performs the requested jobs as they arrive.
+// The results of each job are then sent through the jobResultsChannel channel as a JobResult struct
 func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 	for job := range jobs {
 		if config.Debug {
@@ -201,9 +136,86 @@ func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 			config.ConsoleCyan.Printf("  JOB %v/%v STARTED: %-*s %v with Worker: %v\n", job.JobNumber, config.TotalJobCount, colWidth, "", job.Id, workerID)
 		}
 
-		var jobResult, jobTimer = PerformJob(job.JobName, job)
-		output := JobResult{WorkerID: workerID, Job: job, NumberOfJobs: noOfJobs, JobTimer: jobTimer, JobName: job.JobName, Status: jobResult}
-		jobResultsChannel <- output
+		var jobResultOutput, jobTimer = PerformJob(job.JobName, job)
+		jobResult := JobResult{WorkerID: workerID, Job: job, NumberOfJobs: noOfJobs, JobTimer: jobTimer, JobName: job.JobName, Status: jobResultOutput}
+		jobResultsChannel <- jobResult
 	}
 	wg.Done()
+}
+
+// AllocateJob creates the initial Job struct objects with metadata: JobNumber (int), Id (uuid), JobName (string)
+// These jobs are then sent through the job channel.
+func AllocateJob(jobName string, noOfJobs int) {
+	for i := 0; i < noOfJobs; i++ {
+		uuid := uuid.New()
+		JobNumber := i + 1
+
+		if config.Debug {
+			col1 := fmt.Sprintf("  Allocating Job #%d:", JobNumber)
+			colWidth := common.ConsoleColumnWidth(col1, 35)
+			config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuid)
+		}
+
+		job := Job{JobNumber: JobNumber, Id: uuid, JobName: jobName}
+		jobs <- job
+	}
+
+	close(jobs)
+}
+
+// PerformJob send the job into the `jobRouter` function so that the jobName (string) can be executed as a function.
+// It receieves job result data and job timing information and sends it back to the Worker
+func PerformJob(jobName string, job Job) (string, float64) {
+	var result string
+	var jobTimer float64
+	result, jobTimer = jobRouter(jobName, job)
+	return result, jobTimer
+}
+
+// WorkerResult consumes the jobResultsChannel and appends each jobResult to the JobResults slice before sending it through the workerResultsChannel channel
+func WorkerResult(workerResultsChannel chan []structs.JobResult) {
+	for jobResult := range jobResultsChannel {
+		jobResultMap := map[string]string{}
+		json.Unmarshal([]byte(jobResult.Status), &jobResultMap)
+
+		JobResults = append(JobResults, jobResult)
+
+		if config.Debug {
+			col1 := fmt.Sprintf("    -> JOB %v/%v COMPLETED:", jobResult.Job.JobNumber, jobResult.NumberOfJobs)
+			colWidth := common.ConsoleColumnWidth(col1, 35)
+			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %v Seconds)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.Job.Id, jobResult.WorkerID, jobResult.JobName, jobResult.JobTimer)
+		}
+	}
+	workerResultsChannel <- JobResults
+}
+
+// jobRouter takes a jobName (string) and then executes that named function.
+// It receieves job result data and job timing information and sends it back to PerformJob
+func jobRouter(jobName string, job structs.Job) (string, float64) {
+	switch jobName {
+	case "EmptySleepJob":
+		myJob := emptySleepJob.Job(job)
+		result, jobTimer := myJob.EmptySleepJob()
+		return result, jobTimer
+	case "PiJob":
+		myJob := piJob.Job(job)
+		result, jobTimer := myJob.PiJob()
+		return result, jobTimer
+	default:
+		panic("Unknown function name: " + jobName)
+	}
+}
+
+// getAttr iterates through an interface and returns the value of the requested field.
+func getAttr(obj interface{}, fieldName string) reflect.Value {
+	pointToStruct := reflect.ValueOf(obj)
+	curStruct := pointToStruct.Elem()
+	if curStruct.Kind() != reflect.Struct {
+		panic("not struct")
+	}
+	curField := curStruct.FieldByName(fieldName)
+	if !curField.IsValid() {
+		panic("not found:" + fieldName)
+	}
+	return curField
 }
