@@ -308,6 +308,11 @@ For details on these commands, see the bash scripts in the 'scripts/' directory.
 
 `make golang-test` To test the application using `gotestsum` **[gotestsum](https://github.com/gotestyourself/gotestsum#install) must be installed.**
 
+#### Code coverage:
+
+`go test ./... -coverprofile ./coverage/coverprofile.out`
+`go tool cover -html=./coverage/coverprofile.out -o ./coverage/cover.html`
+
 ## Benchmark Tests
 
 Results of running the application (`make golang-run`): 8 Iterations, starting with 1 Worker, ending with 8 Workers, all processing 64 of the same job (PiJob)
