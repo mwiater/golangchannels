@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/mattwiater/golangchannels/config"
 	"github.com/mattwiater/golangchannels/dispatcher"
@@ -42,13 +43,18 @@ func BenchmarkRun(b *testing.B) {
 
 	for i := startingWorkerCount; i <= maxWorkerCount; i++ {
 		b.Run(fmt.Sprintf("Worker Count: %d", startingWorkerCount), func(b *testing.B) {
+
+			benchmarkStartTime := time.Now()
 			config.ConsoleGreen.Printf("\n  BENCHMARK SETUP:\n")
 			config.ConsoleGreen.Printf("  #=> Job: %*s\n", 7, *jobName)
 			config.ConsoleGreen.Printf("  #=> Starting Worker Count: %*d\n", 7, startingWorkerCount)
 			config.ConsoleGreen.Printf("  #=> Max Worker Count: %*d\n", 12, maxWorkerCount)
 			config.ConsoleGreen.Printf("  #=> Job Count: %*d\n", 20, jobCount)
-			fmt.Println()
 			dispatcher.Run(*jobName, startingWorkerCount, maxWorkerCount, jobCount)
+			benchmarkEndTime := time.Now()
+			benchmarkElapsed := benchmarkEndTime.Sub(benchmarkStartTime)
+			config.ConsoleCyan.Printf("    #=> Benchmark Elapsed: %*s\n", 21, benchmarkElapsed)
+			fmt.Println()
 			startingWorkerCount++
 		})
 	}
