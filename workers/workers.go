@@ -14,6 +14,7 @@ import (
 	"github.com/mattwiater/golangchannels/config"
 
 	"github.com/mattwiater/golangchannels/jobs/emptySleepJob"
+	"github.com/mattwiater/golangchannels/jobs/ioJob"
 	"github.com/mattwiater/golangchannels/jobs/piJob"
 	"github.com/mattwiater/golangchannels/structs"
 )
@@ -203,6 +204,10 @@ func jobRouter(jobName string, job structs.Job) (string, float64) {
 	case "PiJob":
 		myJob := piJob.Job(job)
 		result, jobTimer := myJob.PiJob()
+		return result, jobTimer
+	case "IoJob":
+		myJob := ioJob.Job(job)
+		result, jobTimer := myJob.IoJob()
 		return result, jobTimer
 	default:
 		panic("Unknown function name: " + jobName)

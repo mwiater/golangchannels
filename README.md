@@ -155,21 +155,89 @@ Summary Results: EmptySleepJob
 Benchmark comparison: `make golang-benchmark`
 
 ```
+Clearing test cache...
+...Complete.
+
 Running benchmarks...
+
+  BENCHMARK SETUP:
+  #=> Job: EmptySleepJob
+  #=> Starting Worker Count:       1
+  #=> Max Worker Count:            8
+  #=> Job Count:                   16
+    #=> Benchmark Elapsed:         46.104529262s
+
 goos: linux
 goarch: amd64
 cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
-BenchmarkRun/Worker_Count:_1-8                 1        46110535159 ns/op         223928 B/op       3882 allocs/op
-BenchmarkRun/Worker_Count:_2-8                 1        30029084843 ns/op         197120 B/op       3336 allocs/op
-BenchmarkRun/Worker_Count:_3-8                 1        22048430705 ns/op         217528 B/op       2856 allocs/op
-BenchmarkRun/Worker_Count:_4-8                 1        16022740159 ns/op         111064 B/op       2379 allocs/op
-BenchmarkRun/Worker_Count:_5-8                 1        12008797437 ns/op          87400 B/op       1908 allocs/op
-BenchmarkRun/Worker_Count:_6-8                 1        8010978770 ns/op           67784 B/op       1434 allocs/op
-BenchmarkRun/Worker_Count:_7-8                 1        5005642671 ns/op           45944 B/op        966 allocs/op
-BenchmarkRun/Worker_Count:_8-8                 1        2008275612 ns/op           24672 B/op        505 allocs/op
+BenchmarkRun/Worker_Count:_1-8                 1        46104598869 ns/op         235712 B/op       4203 allocs/op
+
+  BENCHMARK SETUP:
+  #=> Job: EmptySleepJob
+  #=> Starting Worker Count:       2
+  #=> Max Worker Count:            8
+  #=> Job Count:                   16
+    #=> Benchmark Elapsed:         30.039865569s
+
+BenchmarkRun/Worker_Count:_2-8                 1        30039887054 ns/op         200440 B/op       3576 allocs/op
+
+  BENCHMARK SETUP:
+  #=> Job: EmptySleepJob
+  #=> Starting Worker Count:       3
+  #=> Max Worker Count:            8
+  #=> Job Count:                   16
+    #=> Benchmark Elapsed:         22.033414346s
+
+BenchmarkRun/Worker_Count:_3-8                 1        22033433374 ns/op         217856 B/op       3075 allocs/op
+
+  BENCHMARK SETUP:
+  #=> Job: EmptySleepJob
+  #=> Starting Worker Count:       4
+  #=> Max Worker Count:            8
+  #=> Job Count:                   16
+    #=> Benchmark Elapsed:         16.016102428s
+
+BenchmarkRun/Worker_Count:_4-8                 1        16016143164 ns/op         118288 B/op       2587 allocs/op
+
+  BENCHMARK SETUP:
+  #=> Job: EmptySleepJob
+  #=> Starting Worker Count:       5
+  #=> Max Worker Count:            8
+  #=> Job Count:                   16
+    #=> Benchmark Elapsed:         12.015069931s
+
+BenchmarkRun/Worker_Count:_5-8                 1        12015090970 ns/op          94864 B/op       2089 allocs/op
+
+  BENCHMARK SETUP:
+  #=> Job: EmptySleepJob
+  #=> Starting Worker Count:       6
+  #=> Max Worker Count:            8
+  #=> Job Count:                   16
+    #=> Benchmark Elapsed:          8.008436433s
+
+BenchmarkRun/Worker_Count:_6-8                 1        8008455986 ns/op           75736 B/op       1573 allocs/op
+
+  BENCHMARK SETUP:
+  #=> Job: EmptySleepJob
+  #=> Starting Worker Count:       7
+  #=> Max Worker Count:            8
+  #=> Job Count:                   16
+    #=> Benchmark Elapsed:         5.002237243s
+
+BenchmarkRun/Worker_Count:_7-8                 1        5002258990 ns/op           50944 B/op       1083 allocs/op
+
+  BENCHMARK SETUP:
+  #=> Job: EmptySleepJob
+  #=> Starting Worker Count:       8
+  #=> Max Worker Count:            8
+  #=> Job Count:                   16
+    #=> Benchmark Elapsed:         2.007394911s
+
+BenchmarkRun/Worker_Count:_8-8                 1        2007433030 ns/op           25672 B/op        556 allocs/op
 PASS
-ok      command-line-arguments  141.255s
+ok      command-line-arguments  141.239s
 ...Complete.
+
 ```
 
 **Overloading EmptySleepJob() Results:**
@@ -179,76 +247,45 @@ In the above example, when limiting the maximum number or workers to `runtime.Nu
 Below are the results for running 64 workers, or `runtime.NumCPU() * 8`:
 
 ```
-+-------------------+----------------+----------------+----------------+
-| NUMBER OF WORKERS | NUMBER OF JOBS | EXECUTION TIME | SPEED INCREASE |
-+-------------------+----------------+----------------+----------------+
-|                 1 |             16 |      16.032758 | (baseline)     |
-|                 2 |             16 |       8.031666 | +2x            |
-|                 3 |             16 |       6.023406 | +2.66x         |
-|                 4 |             16 |       4.013871 | +3.99x         |
-|                 5 |             16 |       4.023615 | +3.98x         |
-|                 6 |             16 |       3.017553 | +5.31x         |
-|                 7 |             16 |       3.014057 | +5.32x         |
-|                 8 |             16 |       2.004924 | +8x            |
-|                 9 |             16 |       2.004691 | +8x            |
-|                10 |             16 |       2.012549 | +7.97x         |
-|                11 |             16 |       2.019926 | +7.94x         |
-|                12 |             16 |       2.002311 | +8.01x         |
-|                13 |             16 |       2.015261 | +7.96x         |
-|                14 |             16 |       2.003148 | +8x            |
-|                15 |             16 |       2.022867 | +7.93x         |
-|                16 |             16 |       1.004523 | +15.96x        |
-|                17 |             16 |       1.001547 | +16.01x        |
-|                18 |             16 |       1.013735 | +15.82x        |
-|                19 |             16 |       1.021544 | +15.69x        |
-|                20 |             16 |       1.026882 | +15.61x        |
-|                21 |             16 |       1.011589 | +15.85x        |
-|                22 |             16 |       1.014409 | +15.81x        |
-|                23 |             16 |       1.001913 | +16x           |
-|                24 |             16 |       1.001759 | +16x           |
-|                25 |             16 |       1.000737 | +16.02x        |
-|                26 |             16 |       1.000726 | +16.02x        |
-|                27 |             16 |       1.005954 | +15.94x        |
-|                28 |             16 |       1.005635 | +15.94x        |
-|                29 |             16 |       1.011591 | +15.85x        |
-|                30 |             16 |       1.002436 | +15.99x        |
-|                31 |             16 |       1.001021 | +16.02x        |
-|                32 |             16 |       1.029714 | +15.57x        |
-|                33 |             16 |       1.001840 | +16x           |
-|                34 |             16 |       1.001056 | +16.02x        |
-|                35 |             16 |       1.009254 | +15.89x        |
-|                36 |             16 |       1.002040 | +16x           |
-|                37 |             16 |       1.001370 | +16.01x        |
-|                38 |             16 |       1.001989 | +16x           |
-|                39 |             16 |       1.002544 | +15.99x        |
-|                40 |             16 |       1.007401 | +15.91x        |
-|                41 |             16 |       1.004792 | +15.96x        |
-|                42 |             16 |       1.005586 | +15.94x        |
-|                43 |             16 |       1.000805 | +16.02x        |
-|                44 |             16 |       1.001293 | +16.01x        |
-|                45 |             16 |       1.002134 | +16x           |
-|                46 |             16 |       1.018746 | +15.74x        |
-|                47 |             16 |       1.039963 | +15.42x        |
-|                48 |             16 |       1.005729 | +15.94x        |
-|                49 |             16 |       1.016810 | +15.77x        |
-|                50 |             16 |       1.009616 | +15.88x        |
-|                51 |             16 |       1.008329 | +15.9x         |
-|                52 |             16 |       1.000620 | +16.02x        |
-|                53 |             16 |       1.000831 | +16.02x        |
-|                54 |             16 |       1.001612 | +16.01x        |
-|                55 |             16 |       1.001994 | +16x           |
-|                56 |             16 |       1.002233 | +16x           |
-|                57 |             16 |       1.002621 | +15.99x        |
-|                58 |             16 |       1.004138 | +15.97x        |
-|                59 |             16 |       1.002829 | +15.99x        |
-|                60 |             16 |       1.001385 | +16.01x        |
-|                61 |             16 |       1.001539 | +16.01x        |
-|                62 |             16 |       1.001430 | +16.01x        |
-|                63 |             16 |       1.002649 | +15.99x        |
-|                64 |             16 |       1.002106 | +16x           |
-+-------------------+----------------+----------------+----------------+
+Summary Results: PiJob
++---------+------+--------------+-----------------+--------+
+| WORKERS | JOBS | AVG JOB TIME | TOTAL PROC TIME |  +/-   |
++---------+------+--------------+-----------------+--------+
+|       1 |   64 | 0.988064s    | 63.359632s      | (1x)*  |
+|       2 |   64 | 1.080282s    | 34.639627s      | +1.83x |
+|       3 |   64 | 1.259059s    | 27.533909s      | +2.3x  |
+|       4 |   64 | 1.438016s    | 23.145630s      | +2.74x |
+|       5 |   64 | 1.537516s    | 20.044856s      | +3.16x |
+|       6 |   64 | 1.880944s    | 20.562739s      | +3.08x |
+|       7 |   64 | 2.121186s    | 20.138135s      | +3.15x |
+|       8 |   64 | 2.540276s    | 20.421168s      | +3.1x  |
+|       9 |   64 | 2.659540s    | 19.800304s      | +3.2x  |
+|      10 |   64 | 2.890543s    | 19.415050s      | +3.26x |
+|      11 |   64 | 3.307533s    | 19.838304s      | +3.19x |
+|      12 |   64 | 3.587793s    | 20.066332s      | +3.16x |
+|      13 |   64 | 4.049644s    | 20.471609s      | +3.1x  |
+|      14 |   64 | 4.312730s    | 20.940306s      | +3.03x |
+|      15 |   64 | 4.474387s    | 20.171849s      | +3.14x |
+|      16 |   64 | 5.073989s    | 20.682957s      | +3.06x |
+|      17 |   64 | 5.282467s    | 20.934039s      | +3.03x |
+|      18 |   64 | 5.468803s    | 20.829361s      | +3.04x |
+|      19 |   64 | 5.673584s    | 20.477446s      | +3.09x |
+|      20 |   64 | 5.968736s    | 20.362165s      | +3.11x |
+|      21 |   64 | 6.371592s    | 20.383568s      | +3.11x |
+|      22 |   64 | 6.541627s    | 19.899953s      | +3.18x |
+|      23 |   64 | 6.518885s    | 19.513377s      | +3.25x |
+|      24 |   64 | 6.797447s    | 19.832938s      | +3.19x |
+|      25 |   64 | 6.876581s    | 19.447455s      | +3.26x |
+|      26 |   64 | 6.877876s    | 18.923182s      | +3.35x |
+|      27 |   64 | 7.118303s    | 18.781495s      | +3.37x |
+|      28 |   64 | 7.227538s    | 18.356835s      | +3.45x |
+|      29 |   64 | 7.767756s    | 18.708181s      | +3.39x |
+|      30 |   64 | 7.875914s    | 18.318063s      | +3.46x |
+|      31 |   64 | 8.218964s    | 18.289108s      | +3.46x |
+|      32 |   64 | 8.425439s    | 17.590077s      | +3.6x  |
++---------+------+--------------+-----------------+--------+
 
-
+* Baseline: All subsequent +/- tests are compared to this.
 ```
 
 
