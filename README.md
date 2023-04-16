@@ -510,7 +510,14 @@ ok      command-line-arguments  18.024s
 
 ---
 
-# Comparing CPU profiles via pperf:
+# Comparing CPU profiles via pprof:
+
+## Web
+
+go tool pprof -http='192.168.0.99:8081' ./pprof/_memprofile-08-workers.out
+
+
+## Commandline
 
 clear && go tool pprof pprof/cpuprofile-01.out
 
@@ -740,3 +747,4 @@ Dropped 302 nodes (cum <= 0.48s)
          0     0% 90.21%      0.66s  0.68%  runtime.scanstack
          0     0% 90.21%      4.17s  4.31%  runtime.sysUnused
 ```
+

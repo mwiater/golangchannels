@@ -2,8 +2,11 @@
 package workers
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
 	"strings"
 	"sync"
@@ -33,7 +36,7 @@ var WorkerStats []WorkerStat
 
 // Workers create worker pools, set up channels, and allocate and perform jobs
 // Each worker returns timing inforation back to the dispacher: total worker elapsed time for processing all jobs, average job processing time
-func Workers(jobName string, workerCount int, jobCount int) (float64, float64) {
+func Workers(jobName string, workerCount int, jobCount int) (float64, float64, uint64) {
 	// Jobs to run for each iteration
 	// Need to reassign in this closure
 	jobCount = jobCount //nolint
@@ -79,17 +82,22 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64) {
 	CreateWorkerPool(workerCount, numberOfJobs)
 	allJobResults := <-jobResults
 
+	memAllocSum := uint64(0)
 	jobElapsedSum := 0.0
 	for _, allJobResult := range allJobResults[(len(allJobResults) - numberOfJobs):] {
 		jobTime := getAttr(&allJobResult, "JobTimer")
 		jobTimeFloat := jobTime.Interface().(float64)
 		jobElapsedSum += (jobTimeFloat)
 
+		memAlloc := getAttr(&allJobResult, "JobMemAlloc")
+		memAllocInt := memAlloc.Interface().(uint64)
+		memAllocSum += (memAllocInt)
 	}
-
-	jobElapsedAvg := (float64(jobElapsedSum)) / (float64(numberOfJobs))
 	endTime := time.Now()
 	diff := endTime.Sub(startTime)
+
+	jobElapsedAvg := (float64(jobElapsedSum)) / (float64(numberOfJobs))
+	memAllocAvg := memAllocSum / uint64(numberOfJobs)
 
 	if config.Debug {
 		fmt.Println()
@@ -104,7 +112,7 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64) {
 	}
 
 	workersElapsedTime = diff.Seconds()
-	return float64(workersElapsedTime), jobElapsedAvg
+	return float64(workersElapsedTime), jobElapsedAvg, memAllocAvg
 }
 
 // CreateWorkerPool creates the desireed number or workers, assigns UUIDs, and create a worker pool waitgroup to synchronize workers.
@@ -136,9 +144,9 @@ func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 			colWidth := common.ConsoleColumnWidth(col1, 35)
 			config.ConsoleCyan.Printf("  JOB %v/%v STARTED: %-*s %v with Worker: %v\n", job.JobNumber, config.TotalJobCount, colWidth, "", job.Id, workerID)
 		}
-
 		var jobResultOutput, jobTimer = PerformJob(job.JobName, job)
-		jobResult := JobResult{WorkerID: workerID, Job: job, NumberOfJobs: noOfJobs, JobTimer: jobTimer, JobName: job.JobName, Status: jobResultOutput}
+		currentMemStat, _ := calculateMemory()
+		jobResult := JobResult{WorkerID: workerID, Job: job, NumberOfJobs: noOfJobs, JobTimer: jobTimer, JobMemAlloc: currentMemStat, JobName: job.JobName, Status: jobResultOutput}
 		jobResultsChannel <- jobResult
 	}
 	wg.Done()
@@ -226,4 +234,33 @@ func getAttr(obj interface{}, fieldName string) reflect.Value {
 		panic("not found:" + fieldName)
 	}
 	return curField
+}
+
+func calculateMemory() (uint64, error) {
+	process_id := os.Getpid()
+	f, err := os.Open(fmt.Sprintf("/proc/%d/smaps", process_id))
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+
+	res := uint64(0)
+	pfx := []byte("Pss:")
+	r := bufio.NewScanner(f)
+	for r.Scan() {
+		line := r.Bytes()
+		if bytes.HasPrefix(line, pfx) {
+			var size uint64
+			_, err := fmt.Sscanf(string(line[4:]), "%d", &size)
+			if err != nil {
+				return 0, err
+			}
+			res += size
+		}
+	}
+	if err := r.Err(); err != nil {
+		return 0, err
+	}
+
+	return res, nil
 }

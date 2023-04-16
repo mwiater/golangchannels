@@ -17,6 +17,7 @@ type JobResult struct {
 	Job          Job
 	NumberOfJobs int
 	JobTimer     float64
+	JobMemAlloc  uint64
 	JobName      string
 	Status       string
 	Data         string
@@ -27,6 +28,7 @@ type WorkerStat struct {
 	JobName           string
 	ExecutionTime     float64
 	JobElapsedAverage float64
+	MemAllocAverage   uint64
 	Data              string
 }
 
