@@ -126,7 +126,7 @@ func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
 			config.ConsoleGreen.Printf("Allocating Worker #%d: %-*s %v\n", i+1, colWidth, "", uuidTrimmed)
 		}
 
-		go Worker(&wg, uuidTrimmed, noOfJobs)
+		go Worker(&wg, uuid, noOfJobs)
 	}
 	wg.Wait()
 
@@ -135,12 +135,18 @@ func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
 
 // Worker recieves jobs from the jobs channel and performs the requested jobs as they arrive.
 // The results of each job are then sent through the jobResultsChannel channel as a JobResult struct
-func Worker(wg *sync.WaitGroup, workerID string, noOfJobs int) {
+func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 	for job := range jobs {
 		if config.Debug {
+			jobIdSegments := strings.Split(job.Id.String(), "-")
+			jobIdTrimmed := strings.Join(jobIdSegments[:2], "-")
+
+			workerIdSegments := strings.Split(workerID.String(), "-")
+			workerIdTrimmed := strings.Join(workerIdSegments[:2], "-")
+
 			col1 := fmt.Sprintf("  JOB %v/%v STARTED:", job.JobNumber, config.TotalJobCount)
 			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleCyan.Printf("  JOB %v/%v STARTED: %-*s %v with Worker: %v\n", job.JobNumber, config.TotalJobCount, colWidth, "", job.Id, workerID)
+			config.ConsoleCyan.Printf("  JOB %v/%v STARTED: %-*s %v with Worker: %v\n", job.JobNumber, config.TotalJobCount, colWidth, "", jobIdTrimmed, workerIdTrimmed)
 		}
 		var jobResultOutput, jobTimer = PerformJob(job.JobName, job)
 		currentMemStat, _ := common.CalculateMemory()
@@ -167,7 +173,7 @@ func AllocateJob(jobName string, noOfJobs int) {
 			config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuidTrimmed)
 		}
 
-		job := Job{JobNumber: JobNumber, Id: uuidTrimmed, JobName: jobName}
+		job := Job{JobNumber: JobNumber, Id: uuid, JobName: jobName}
 		jobs <- job
 	}
 
@@ -194,10 +200,16 @@ func WorkerResult(workerResultsChannel chan []structs.JobResult) {
 
 		JobResults = append(JobResults, jobResult)
 
+		jobIdSegments := strings.Split(jobResult.Job.Id.String(), "-")
+		jobIdTrimmed := strings.Join(jobIdSegments[:2], "-")
+
+		workerIdSegments := strings.Split(jobResult.WorkerID.String(), "-")
+		workerIdTrimmed := strings.Join(workerIdSegments[:2], "-")
+
 		if config.Debug {
 			col1 := fmt.Sprintf("    -> JOB %v/%v COMPLETED:", jobResult.Job.JobNumber, jobResult.NumberOfJobs)
 			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %.3f Seconds / %.3fMB)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.Job.Id, jobResult.WorkerID, jobResult.JobName, jobResult.JobTimer, jobResult.JobMemAlloc)
+			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %.3f Seconds / %.3fMB)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobIdTrimmed, workerIdTrimmed, jobResult.JobName, jobResult.JobTimer, jobResult.JobMemAlloc)
 		}
 	}
 	workerResultsChannel <- JobResults

@@ -19,7 +19,7 @@ func TestPiJob(t *testing.T) {
 	var result, jobTimer = myJob.PiJob()
 
 	var testString string = "12345"
-	var testFloat64 float64 = 100
+	var testFloat64 float64 = 100.001
 
 	assert.IsType(t, testString, result)
 	assert.IsType(t, testFloat64, jobTimer)

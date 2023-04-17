@@ -30,7 +30,7 @@ func main() {
 
 	config.EnvVarsFile = envVarsFile
 
-	config.AppConfig()
+	_, err = config.AppConfig()
 	if err != nil {
 		log.Fatal("Error: config.AppConfig()")
 	}

@@ -23,7 +23,10 @@ func (job Job) IoJob() (string, float64) {
 			panic(err)
 		}
 		for i := 0; i < 100000; i++ {
-			f.WriteString("some text!\n")
+			_, err := f.WriteString("some text!\n")
+			if err != nil {
+				panic(err)
+			}
 		}
 		f.Close()
 	}
