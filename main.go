@@ -48,19 +48,19 @@ func main() {
 	dispatcher.Run(jobName, config.StartingWorkerCount, config.MaxWorkerCount, config.TotalJobCount)
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Workers", "Jobs", "Avg Job Time", "Total Proc Time", "Avg Mem Use", "+/-"})
+	table.SetHeader([]string{"Workers", "Jobs", "Avg Job Time", "Total Worker Time", "Avg Mem Use", "+/-"})
 
 	for i, stat := range workers.WorkerStats {
 		currentStatJobElapsedAverage := stat.JobElapsedAverage
 		currentStatExecutionTime := stat.ExecutionTime
 		baselineExecutionTime := workers.WorkerStats[0].ExecutionTime
-		currentStatMemAllocAverage := stat.MemAllocAverage
+		currentStatMemAllocAverage := float64(stat.MemAllocAverage)
 
 		workerCountString := fmt.Sprintf("%v", stat.Workers)
 		jobsCountString := fmt.Sprintf("%v", config.TotalJobCount)
-		jobExecutionAverage := fmt.Sprintf("%fs", currentStatJobElapsedAverage)
-		memAllocAverage := fmt.Sprintf("%vb", currentStatMemAllocAverage)
-		workerExecutionTime := fmt.Sprintf("%fs", currentStatExecutionTime)
+		jobExecutionAverage := fmt.Sprintf("%.2fs", currentStatJobElapsedAverage)
+		memAllocAverage := fmt.Sprintf("%.3fMb", math.Round(currentStatMemAllocAverage*1000)/1000)
+		workerExecutionTime := fmt.Sprintf("%.2fs", currentStatExecutionTime)
 
 		speedIncrease := "(1x)*"
 

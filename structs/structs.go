@@ -1,23 +1,19 @@
 // Package structs is used to define all of the Structs used in the application.
 package structs
 
-import (
-	"github.com/google/uuid"
-)
-
 type Job struct {
 	JobNumber int
-	Id        uuid.UUID
+	Id        string
 	JobName   string
 	Data      string
 }
 
 type JobResult struct {
-	WorkerID     uuid.UUID
+	WorkerID     string
 	Job          Job
 	NumberOfJobs int
 	JobTimer     float64
-	JobMemAlloc  uint64
+	JobMemAlloc  float32
 	JobName      string
 	Status       string
 	Data         string
@@ -28,7 +24,7 @@ type WorkerStat struct {
 	JobName           string
 	ExecutionTime     float64
 	JobElapsedAverage float64
-	MemAllocAverage   uint64
+	MemAllocAverage   float32
 	Data              string
 }
 

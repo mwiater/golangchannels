@@ -2,12 +2,8 @@
 package workers
 
 import (
-	"bufio"
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"os"
-	"reflect"
 	"strings"
 	"sync"
 	"time"
@@ -36,7 +32,7 @@ var WorkerStats []WorkerStat
 
 // Workers create worker pools, set up channels, and allocate and perform jobs
 // Each worker returns timing inforation back to the dispacher: total worker elapsed time for processing all jobs, average job processing time
-func Workers(jobName string, workerCount int, jobCount int) (float64, float64, uint64) {
+func Workers(jobName string, workerCount int, jobCount int) (float64, float64, float32) {
 	// Jobs to run for each iteration
 	// Need to reassign in this closure
 	jobCount = jobCount //nolint
@@ -82,22 +78,22 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64, u
 	CreateWorkerPool(workerCount, numberOfJobs)
 	allJobResults := <-jobResults
 
-	memAllocSum := uint64(0)
+	memAllocSum := float32(0)
 	jobElapsedSum := 0.0
 	for _, allJobResult := range allJobResults[(len(allJobResults) - numberOfJobs):] {
-		jobTime := getAttr(&allJobResult, "JobTimer")
+		jobTime := common.GetAttr(&allJobResult, "JobTimer")
 		jobTimeFloat := jobTime.Interface().(float64)
 		jobElapsedSum += (jobTimeFloat)
 
-		memAlloc := getAttr(&allJobResult, "JobMemAlloc")
-		memAllocInt := memAlloc.Interface().(uint64)
-		memAllocSum += (memAllocInt)
+		memAlloc := common.GetAttr(&allJobResult, "JobMemAlloc")
+		memAllocFloat := memAlloc.Interface().(float32)
+		memAllocSum += memAllocFloat
 	}
 	endTime := time.Now()
 	diff := endTime.Sub(startTime)
 
 	jobElapsedAvg := (float64(jobElapsedSum)) / (float64(numberOfJobs))
-	memAllocAvg := memAllocSum / uint64(numberOfJobs)
+	memAllocAvg := float32(memAllocSum / float32(numberOfJobs))
 
 	if config.Debug {
 		fmt.Println()
@@ -112,7 +108,7 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64, u
 	}
 
 	workersElapsedTime = diff.Seconds()
-	return float64(workersElapsedTime), jobElapsedAvg, memAllocAvg
+	return float64(workersElapsedTime), jobElapsedAvg, float32(memAllocAvg)
 }
 
 // CreateWorkerPool creates the desireed number or workers, assigns UUIDs, and create a worker pool waitgroup to synchronize workers.
@@ -121,14 +117,16 @@ func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
 	for i := 0; i < noOfWorkers; i++ {
 		wg.Add(1)
 		uuid := uuid.New()
+		uuidSegments := strings.Split(uuid.String(), "-")
+		uuidTrimmed := strings.Join(uuidSegments[:2], "-")
 
 		if config.Debug {
 			col1 := fmt.Sprintf("Allocating Worker #%v:", i+1)
 			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleGreen.Printf("Allocating Worker #%d: %-*s %v\n", i+1, colWidth, "", uuid)
+			config.ConsoleGreen.Printf("Allocating Worker #%d: %-*s %v\n", i+1, colWidth, "", uuidTrimmed)
 		}
 
-		go Worker(&wg, uuid, noOfJobs)
+		go Worker(&wg, uuidTrimmed, noOfJobs)
 	}
 	wg.Wait()
 
@@ -137,7 +135,7 @@ func CreateWorkerPool(noOfWorkers int, noOfJobs int) {
 
 // Worker recieves jobs from the jobs channel and performs the requested jobs as they arrive.
 // The results of each job are then sent through the jobResultsChannel channel as a JobResult struct
-func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
+func Worker(wg *sync.WaitGroup, workerID string, noOfJobs int) {
 	for job := range jobs {
 		if config.Debug {
 			col1 := fmt.Sprintf("  JOB %v/%v STARTED:", job.JobNumber, config.TotalJobCount)
@@ -145,7 +143,8 @@ func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 			config.ConsoleCyan.Printf("  JOB %v/%v STARTED: %-*s %v with Worker: %v\n", job.JobNumber, config.TotalJobCount, colWidth, "", job.Id, workerID)
 		}
 		var jobResultOutput, jobTimer = PerformJob(job.JobName, job)
-		currentMemStat, _ := calculateMemory()
+		currentMemStat, _ := common.CalculateMemory()
+
 		jobResult := JobResult{WorkerID: workerID, Job: job, NumberOfJobs: noOfJobs, JobTimer: jobTimer, JobMemAlloc: currentMemStat, JobName: job.JobName, Status: jobResultOutput}
 		jobResultsChannel <- jobResult
 	}
@@ -157,15 +156,18 @@ func Worker(wg *sync.WaitGroup, workerID uuid.UUID, noOfJobs int) {
 func AllocateJob(jobName string, noOfJobs int) {
 	for i := 0; i < noOfJobs; i++ {
 		uuid := uuid.New()
+		uuidSegments := strings.Split(uuid.String(), "-")
+		uuidTrimmed := strings.Join(uuidSegments[:2], "-")
+
 		JobNumber := i + 1
 
 		if config.Debug {
 			col1 := fmt.Sprintf("  Allocating Job #%d:", JobNumber)
 			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuid)
+			config.ConsoleGreen.Printf("  Allocating Job #%d: %-*s %v\n", JobNumber, colWidth, "", uuidTrimmed)
 		}
 
-		job := Job{JobNumber: JobNumber, Id: uuid, JobName: jobName}
+		job := Job{JobNumber: JobNumber, Id: uuidTrimmed, JobName: jobName}
 		jobs <- job
 	}
 
@@ -195,7 +197,7 @@ func WorkerResult(workerResultsChannel chan []structs.JobResult) {
 		if config.Debug {
 			col1 := fmt.Sprintf("    -> JOB %v/%v COMPLETED:", jobResult.Job.JobNumber, jobResult.NumberOfJobs)
 			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %v Seconds)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.Job.Id, jobResult.WorkerID, jobResult.JobName, jobResult.JobTimer)
+			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %.3f Seconds / %.3fMB)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.Job.Id, jobResult.WorkerID, jobResult.JobName, jobResult.JobTimer, jobResult.JobMemAlloc)
 		}
 	}
 	workerResultsChannel <- JobResults
@@ -220,47 +222,4 @@ func jobRouter(jobName string, job structs.Job) (string, float64) {
 	default:
 		panic("Unknown function name: " + jobName)
 	}
-}
-
-// getAttr iterates through an interface and returns the value of the requested field.
-func getAttr(obj interface{}, fieldName string) reflect.Value {
-	pointToStruct := reflect.ValueOf(obj)
-	curStruct := pointToStruct.Elem()
-	if curStruct.Kind() != reflect.Struct {
-		panic("not struct")
-	}
-	curField := curStruct.FieldByName(fieldName)
-	if !curField.IsValid() {
-		panic("not found:" + fieldName)
-	}
-	return curField
-}
-
-func calculateMemory() (uint64, error) {
-	process_id := os.Getpid()
-	f, err := os.Open(fmt.Sprintf("/proc/%d/smaps", process_id))
-	if err != nil {
-		return 0, err
-	}
-	defer f.Close()
-
-	res := uint64(0)
-	pfx := []byte("Pss:")
-	r := bufio.NewScanner(f)
-	for r.Scan() {
-		line := r.Bytes()
-		if bytes.HasPrefix(line, pfx) {
-			var size uint64
-			_, err := fmt.Sscanf(string(line[4:]), "%d", &size)
-			if err != nil {
-				return 0, err
-			}
-			res += size
-		}
-	}
-	if err := r.Err(); err != nil {
-		return 0, err
-	}
-
-	return res, nil
 }

@@ -3,6 +3,10 @@ package common
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
+	"os"
+	"reflect"
 	"strings"
 )
 
@@ -19,4 +23,52 @@ func SplitStringLines(s string) []string {
 		lines = append(lines, sc.Text())
 	}
 	return lines
+}
+
+// GetAttr iterates through an interface and returns the value of the requested field.
+func GetAttr(obj interface{}, fieldName string) reflect.Value {
+	pointToStruct := reflect.ValueOf(obj)
+	curStruct := pointToStruct.Elem()
+	if curStruct.Kind() != reflect.Struct {
+		panic("not struct")
+	}
+	curField := curStruct.FieldByName(fieldName)
+	if !curField.IsValid() {
+		panic("not found:" + fieldName)
+	}
+	return curField
+}
+
+func CalculateMemory() (float32, error) {
+	process_id := os.Getpid()
+	f, err := os.Open(fmt.Sprintf("/proc/%d/smaps", process_id))
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+
+	memoryBytes := uint64(0)
+	pfx := []byte("Pss:")
+	r := bufio.NewScanner(f)
+	for r.Scan() {
+		line := r.Bytes()
+		if bytes.HasPrefix(line, pfx) {
+			var size uint64
+			_, err := fmt.Sscanf(string(line[4:]), "%d", &size)
+			if err != nil {
+				return 0, err
+			}
+			memoryBytes += size
+		}
+	}
+	if err := r.Err(); err != nil {
+		return 0, err
+	}
+
+	memoryMB := BToMb(float32(memoryBytes))
+	return float32(memoryMB), nil
+}
+
+func BToMb(b float32) float32 {
+	return b / 1024 / 1024
 }
