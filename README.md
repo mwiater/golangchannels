@@ -306,7 +306,7 @@ For details on these commands, see the bash scripts in the 'scripts/' directory.
 
 ### make golang-godoc
 
-`make golang-lint` To start the docs server: `Starting godoc server on port: 6060...`
+`make golang-lint` To start the docs server: `Starting godoc server on port: 6060...` The root directory for this app is: `/pkg/github.com/mattwiater/golangchannels/`
 
 ### make golang-lint
 
@@ -314,7 +314,34 @@ For details on these commands, see the bash scripts in the 'scripts/' directory.
 
 ### make golang-pprof
 
-`make golang-lint` **[pprof](https://github.com/google/pprof#building-pprof) must be installed** to generate `cpuprofile`, `memprofile`, `blockprofile`, and, `mutexprofile` profiles. This command will generate 1-8 profiles of each type, which can then be analyzed via the command line (e.g.: `go tool pprof ./pprof/cpuprofile-08-workers.out`) or visually via a browser (e.g.: `go tool pprof -http='192.168.0.99:8081' ./pprof/cpuprofile-08-workers.out`).
+`make golang-lint` **[pprof](https://github.com/google/pprof#building-pprof) must be installed** to generate `cpuprofile`, `memprofile`, `blockprofile`, and, `mutexprofile` profiles. This command will generate 1-8 profiles of each type, which can then be analyzed via the command line (e.g.: `go tool pprof ./pprof/cpuprofile-08-workers.out`) or visually via a browser (e.g.: `go tool pprof -http='{your-ip-address}:8081' ./pprof/cpuprofile-08-workers.out`).
+
+Example Output (Just showing the first of 8 benchmarks):
+
+```
+Running pprofs for 8 CPUs...
+Running pprof: 1 Workers
+
+  BENCHMARK SETUP:
+  #=> Job:   PiJob
+  #=> Starting Worker Count:       1
+  #=> Max Worker Count:            1
+  #=> Job Count:                   64
+    #=> Benchmark Elapsed:        1m4.354124664s
+
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz
+BenchmarkRun/Worker_Count:_1-8                 1        64354143863 ns/op       35979108096 B/op        23537220 allocs/op
+PASS
+ok      command-line-arguments  64.552s
+    Generated Profile: ./pprof/cpuprofile-01-workers.out
+    Generated Profile: ./pprof/memprofile-01-workers.out
+    Generated Profile: ./pprof/blockprofile-01-workers.out
+    Generated Profile: ./pprof/mutexprofile-01-workers.out
+
+...
+```
 
 ### make golang-run
 
@@ -353,4 +380,7 @@ DONE 6 tests in 22.292s
 ## Code coverage:
 
 `go test ./... -coverprofile ./coverage/coverprofile.out`
+
 `go tool cover -html=./coverage/coverprofile.out -o ./coverage/cover.html`
+
+The commands above will generate a test coverage report: `./coverage/cover.html`
