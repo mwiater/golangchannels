@@ -200,16 +200,10 @@ func WorkerResult(workerResultsChannel chan []structs.JobResult) {
 
 		JobResults = append(JobResults, jobResult)
 
-		jobIdSegments := strings.Split(jobResult.Job.Id.String(), "-")
-		jobIdTrimmed := strings.Join(jobIdSegments[:2], "-")
-
-		workerIdSegments := strings.Split(jobResult.WorkerID.String(), "-")
-		workerIdTrimmed := strings.Join(workerIdSegments[:2], "-")
-
 		if config.Debug {
 			col1 := fmt.Sprintf("    -> JOB %v/%v COMPLETED:", jobResult.Job.JobNumber, jobResult.NumberOfJobs)
 			colWidth := common.ConsoleColumnWidth(col1, 35)
-			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s %v with Worker: %v (Ran %s in %.3f Seconds / %.3fMB)\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobIdTrimmed, workerIdTrimmed, jobResult.JobName, jobResult.JobTimer, jobResult.JobMemAlloc)
+			config.ConsoleGreen.Printf("    -> JOB %v/%v COMPLETED: %-*s \u2713 Ran %s in: %.3f Seconds / Used %.3fMB of Memory\n", jobResult.Job.JobNumber, jobResult.NumberOfJobs, colWidth, "", jobResult.JobName, jobResult.JobTimer, jobResult.JobMemAlloc)
 		}
 	}
 	workerResultsChannel <- JobResults

@@ -50,7 +50,7 @@ echo -e "${CYANBOLD}Running pprofs for ${NUMPROCS} CPUs...${RESET}"
 for (( workers=1; workers<=NUMPROCS; workers++ ))
 do 
   echo -e "${CYANBOLD}Running pprof: ${workers} Workers${RESET}"
-  go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-0${workers}-workers.out -memprofile ./pprof/memprofile-0${workers}-workers.out -blockprofile ./pprof/blockprofile-0${workers}-workers.out -mutexprofile ./pprof/mutexprofile-0${workers}-workers.out -args -startingWorkerCount=${workers} -maxWorkerCount=${workers} -jobCount=64
+  go clean -testcache && go test ./dispatcher/dispatcher_test.go -bench=. -benchmem -run=^# -cpuprofile ./pprof/cpuprofile-0${workers}-workers.out -memprofile ./pprof/memprofile-0${workers}-workers.out -blockprofile ./pprof/blockprofile-0${workers}-workers.out -mutexprofile ./pprof/mutexprofile-0${workers}-workers.out -args -jobName=PiJob -startingWorkerCount=${workers} -maxWorkerCount=${workers} -jobCount=64
   echo -e "    ${GREENBOLD}Generated Profile: ./pprof/cpuprofile-0${workers}-workers.out${RESET}"
   echo -e "    ${GREENBOLD}Generated Profile: ./pprof/memprofile-0${workers}-workers.out${RESET}"
   echo -e "    ${GREENBOLD}Generated Profile: ./pprof/blockprofile-0${workers}-workers.out${RESET}"
