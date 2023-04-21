@@ -80,12 +80,19 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64, f
 
 	memAllocSum := float32(0)
 	jobElapsedSum := 0.0
-	for _, allJobResult := range allJobResults[(len(allJobResults) - numberOfJobs):] {
-		jobTime := common.GetAttr(&allJobResult, "JobTimer")
+	for _, jobResult := range allJobResults[(len(allJobResults) - numberOfJobs):] {
+		jobTime, err := common.GetAttr(&jobResult, "JobTimer")
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
 		jobTimeFloat := jobTime.Interface().(float64)
 		jobElapsedSum += (jobTimeFloat)
 
-		memAlloc := common.GetAttr(&allJobResult, "JobMemAlloc")
+		memAlloc, err := common.GetAttr(&jobResult, "JobMemAlloc")
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		memAllocFloat := memAlloc.Interface().(float32)
 		memAllocSum += memAllocFloat
 	}

@@ -26,19 +26,18 @@ func SplitStringLines(s string) []string {
 }
 
 // GetAttr iterates through an interface and returns the value of the requested field.
-func GetAttr(obj interface{}, fieldName string) reflect.Value {
+func GetAttr(obj interface{}, fieldName string) (reflect.Value, error) {
 	pointToStruct := reflect.ValueOf(obj)
 	curStruct := pointToStruct.Elem()
-	if curStruct.Kind() != reflect.Struct {
-		panic("not struct")
-	}
 	curField := curStruct.FieldByName(fieldName)
 	if !curField.IsValid() {
-		panic("not found:" + fieldName)
+		emptyValue := reflect.ValueOf([]interface{}{nil}).Index(0)
+		return emptyValue, fmt.Errorf("Field not found: %v", fieldName)
 	}
-	return curField
+	return curField, nil
 }
 
+// CalculateMemory returns the current process memory usage.
 func CalculateMemory() (float32, error) {
 	process_id := os.Getpid()
 	f, err := os.Open(fmt.Sprintf("/proc/%d/smaps", process_id))
@@ -69,6 +68,7 @@ func CalculateMemory() (float32, error) {
 	return float32(memoryMB), nil
 }
 
+// BToMb converts bytes to megabytes.
 func BToMb(b float32) float32 {
 	return b / 1024 / 1024
 }
