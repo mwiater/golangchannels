@@ -92,10 +92,3 @@ func TestBToMb(t *testing.T) {
 		}
 	})
 }
-
-type Job struct {
-	JobNumber int
-	Id        uuid.UUID
-	JobName   string
-	Data      string
-}
