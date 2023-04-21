@@ -32,35 +32,47 @@ func TestGetAttr(t *testing.T) {
 	jobResult1 := structs.JobResult{WorkerID: uuid, Job: job1, NumberOfJobs: 16, JobTimer: float64(1), JobMemAlloc: float32(1), JobName: "EmptySleepJob", Status: ""}
 	jobResult2 := structs.JobResult{WorkerID: uuid, Job: job1, NumberOfJobs: 16, JobTimer: 1, JobMemAlloc: float32(1), JobName: "EmptySleepJob", Status: ""}
 
-	var tests = []struct {
-		name   string
-		input1 *structs.JobResult
-		input2 string
-		want   reflect.Value
-	}{
-		// the table itself
-		{"equal", &jobResult1, "JobTimer", testJobResultAttr},
-		{"error", &jobResult2, "JobTimer2", testJobResultAttr},
-	}
+	t.Run("success", func(t *testing.T) {
+		var tests = []struct {
+			testName string
+			input1   *structs.JobResult
+			input2   string
+			want     reflect.Value
+		}{
+			// the table itself
+			{"equal", &jobResult1, "JobTimer", testJobResultAttr},
+		}
 
-	// The execution loop
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			ans, err := common.GetAttr(tt.input1, tt.input2)
-			if err != nil {
-				if tt.name == "error" {
+		for _, tt := range tests {
+			t.Run(tt.testName, func(t *testing.T) {
+				ans, _ := common.GetAttr(tt.input1, tt.input2)
+				fmt.Println("EQUAL", ans, tt.want)
+				assert.EqualValues(t, fmt.Sprintln(ans), fmt.Sprintln(tt.want))
+			})
+		}
+	})
 
-				} else {
-					t.Error(err.Error())
-				}
+	t.Run("failure", func(t *testing.T) {
+		var tests = []struct {
+			testName string
+			input1   *structs.JobResult
+			input2   string
+			want     reflect.Value
+		}{
+			// the table itself
+			{"error", &jobResult2, "JobTimer2", testJobResultAttr},
+		}
 
-			} else {
-				if fmt.Sprintln(ans) != fmt.Sprintln(tt.want) {
-					t.Errorf("Expected values are not equal: %v != %v", fmt.Sprintln(ans), fmt.Sprintln(tt.want))
-				}
-			}
-		})
-	}
+		for _, tt := range tests {
+			t.Run(tt.testName, func(t *testing.T) {
+				ans, err := common.GetAttr(tt.input1, tt.input2)
+
+				fmt.Println("ERROR", ans, tt.want)
+
+				assert.Error(t, err)
+			})
+		}
+	})
 }
 
 func TestCalculateMemory(t *testing.T) {
