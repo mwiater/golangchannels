@@ -18,10 +18,38 @@ func TestConsoleColumnWidth(t *testing.T) {
 }
 
 func TestSplitStringLines(t *testing.T) {
-	splitString := common.SplitStringLines("12345\n67890")
-	testSplitString := []string{"12345", "67890"}
-	assert.IsType(t, testSplitString, splitString)
-	assert.Equal(t, testSplitString, splitString)
+
+	t.Run("success", func(t *testing.T) {
+		var tests = []struct {
+			testName string
+			input1   string
+			want     []string
+		}{
+			{"multiline input", "12345\n67890", []string{"12345", "67890"}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.testName, func(t *testing.T) {
+				ans := common.SplitStringLines("12345\n67890")
+				assert.EqualValues(t, fmt.Sprintln(ans), fmt.Sprintln(tt.want))
+			})
+		}
+
+		tests = []struct {
+			testName string
+			input1   string
+			want     []string
+		}{
+			{"single line input", "abcde", []string{"abcde"}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.testName, func(t *testing.T) {
+				ans := common.SplitStringLines("abcde")
+				assert.EqualValues(t, fmt.Sprintln(ans), fmt.Sprintln(tt.want))
+			})
+		}
+	})
 }
 
 func TestGetAttr(t *testing.T) {

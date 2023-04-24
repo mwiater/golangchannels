@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# From root of project, run: `bash scripts/golang_build.sh`
+# From root of project, run: `bash scripts/golang_build_linux.sh`
 
 clear
 

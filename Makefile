@@ -21,8 +21,14 @@ list:
 golang-run:
 	scripts/golang_run.sh
 
-golang-build:
-	scripts/golang_build.sh
+golang-build-linux64:
+	scripts/golang_build_linux64.sh
+
+golang-build-windows64:
+	scripts/golang_build_windows64.sh
+
+golang-build-arm64:
+	scripts/golang_build_arm64.sh
 
 golang-test:
 	scripts/golang_test.sh

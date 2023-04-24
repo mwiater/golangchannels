@@ -27,18 +27,22 @@ Optional:
 
 ### Convenience Commands
 
+**NOTE:** _This repository was created to run on a linux x86 machine. There are example `make` commands and scripts to cross-compile to other architectures, but these convenience methods have only been tested from a linux x86 source (though the corss-compiled binaries have been successfully tested on the appropriate source architectures). If you are on another source architecture, native `go` commands should work fine, but the build scripts included here may not. See the `./scripts` directory to see what the bash scripts are doing--you should be able to infer the native `go` commands for your system, if you have issues executing any of the convenience scripts._
+
 Type `make` for a list of commands (comments added for clarity):
 
 ```
 Targets in this Makefile:
 
-make golang-benchmark # Run benchmark test: ./dispatcher/dispatcher_test.go
-make golang-build     # Build the application binary to: ./bin/golangchannels
-make golang-godoc     # Start the documentation server
-make golang-lint      # Lint the application
-make golang-pprof     # Generate pprof profiles in ./pprof
-make golang-run       # Compile and run the binary
-make golang-test      # Run the tests
+make golang-benchmark       # Run benchmark test: ./dispatcher/dispatcher_test.go
+make golang-build-arm64     # Build the application binary to: ./bin/golangchannels-arm64
+make golang-build-linux64   # Build the application binary to: ./bin/golangchannels
+make golang-build-windows64 # Build the application binary to: ./bin/bin/golangchannels.exe
+make golang-godoc           # Start the documentation server
+make golang-lint            # Lint the application
+make golang-pprof           # Generate pprof profiles in ./pprof
+make golang-run             # Compile and run the binary
+make golang-test            # Run the tests
 
 For details on these commands, see the bash scripts in the 'scripts/' directory.
 ```
@@ -292,7 +296,9 @@ List available commands: `make`
 Targets in this Makefile:
 
 make golang-benchmark
-make golang-build
+make golang-build-arm64
+make golang-build-linux64
+make golang-build-windows64
 make golang-godoc
 make golang-lint
 make golang-pprof
@@ -304,15 +310,19 @@ For details on these commands, see the bash scripts in the 'scripts/' directory.
 
 ### make golang-benchmark
 
-`make golang-lint` To benchmark the application via: `./dispatcher/dispatcher_test.go`
+`make golang-benchmark` To benchmark the application via: `./dispatcher/dispatcher_test.go`
 
 ### make golang-build
 
-`make golang-lint` Build the application binary to: `./bin/golangchannels`
+`make golang-build` Build the application binary to: `./bin/golangchannels`
+
+make golang_build_arm64
+make golang_build_linux64
+make golang_build_windows64
 
 ### make golang-godoc
 
-`make golang-lint` To start the docs server: `Starting godoc server on port: 6060...` The root directory for this app is: `/pkg/github.com/mattwiater/golangchannels/`
+`make golang-godoc` To start the docs server: `Starting godoc server on port: 6060...` The root directory for this app is: `/pkg/github.com/mattwiater/golangchannels/`
 
 ### make golang-lint
 
@@ -320,7 +330,7 @@ For details on these commands, see the bash scripts in the 'scripts/' directory.
 
 ### make golang-pprof
 
-`make golang-lint` **[pprof](https://github.com/google/pprof#building-pprof) must be installed** to generate `cpuprofile`, `memprofile`, `blockprofile`, and, `mutexprofile` profiles. This command will generate 1-8 profiles of each type, which can then be analyzed via the command line (e.g.: `go tool pprof ./pprof/cpuprofile-08-workers.out`) or visually via a browser (e.g.: `go tool pprof -http='{your-ip-address}:8081' ./pprof/cpuprofile-08-workers.out`).
+`make golang-pprof` **[pprof](https://github.com/google/pprof#building-pprof) must be installed** to generate `cpuprofile`, `memprofile`, `blockprofile`, and, `mutexprofile` profiles. This command will generate 1-8 profiles of each type, which can then be analyzed via the command line (e.g.: `go tool pprof ./pprof/cpuprofile-08-workers.out`) or visually via a browser (e.g.: `go tool pprof -http='{your-ip-address}:8081' ./pprof/cpuprofile-08-workers.out`).
 
 Example Output (Just showing the first of 8 benchmarks):
 

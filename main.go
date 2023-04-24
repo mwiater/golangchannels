@@ -6,7 +6,6 @@ import (
 	"log"
 	"math"
 	"os"
-	"os/exec"
 	"os/signal"
 	"syscall"
 
@@ -20,17 +19,9 @@ import (
 var envVarsFile embed.FS
 
 func main() {
-	// Clear Screen
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal("Error: cmd.Run()", err)
-	}
-
 	config.EnvVarsFile = envVarsFile
 
-	_, err = config.AppConfig()
+	_, err := config.AppConfig()
 	if err != nil {
 		log.Fatal("Error: config.AppConfig()")
 	}
