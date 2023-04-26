@@ -2,13 +2,13 @@
 
 ## Reference Article
 
-See my article on Medium here: https://medium.com/@matt.wiater/golang-channels-goroutines-and-optimal-concurrency-demystifying-through-examples-a43ba6aee74f
+**See my accompanying article on Medium here:** https://medium.com/@matt.wiater/golang-channels-goroutines-and-optimal-concurrency-demystifying-through-examples-a43ba6aee74f
 
 ## To Do
 
- - [ ] Better tests
  - [ ] Benchmark docs and examples
- - [ ] Document via godocs after tests are updated
+ - [ ] Better tests
+ - [ ] More documentation via godocs after tests are updated
 
 ## Installation
 
