@@ -36,3 +36,17 @@ type SleepJobResult struct {
 	Status    string
 	Data      string
 }
+
+type Caller struct {
+	CallerName string
+	CallerFile string
+	CallerLine string
+}
+
+type Error struct {
+	CallerName string
+	CallerFile string
+	CallerLine string
+	Code       int
+	Message    string
+}
