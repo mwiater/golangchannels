@@ -2,33 +2,20 @@
 package dispatcher
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
-	"github.com/mattwiater/golangchannels/common"
 	"github.com/mattwiater/golangchannels/config"
+	"github.com/mattwiater/golangchannels/errorHandler"
 	"github.com/mattwiater/golangchannels/workers"
 )
 
 // Run starts the workers
 func Run(jobName string, startingWorkerCount int, maxWorkerCount int, totalJobCount int) {
-	testErr := errors.New("can't divide by zero")
-	if testErr != nil {
-		var e = common.GetCallerInfo(1)
-		e.Code = 123
-		e.Message = "zzz"
-		empJSON, err := json.MarshalIndent(e, "", "  ")
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
-
-		fmt.Println(string(empJSON))
-		os.Exit(1)
-	}
+	_ = errorHandler.New(errors.New("TEST ERROR"), false)
+	os.Exit(1)
 
 	testCount := 1
 	for i := startingWorkerCount; i <= maxWorkerCount; i++ {

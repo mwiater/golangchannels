@@ -46,7 +46,7 @@ type Caller struct {
 type Error struct {
 	CallerName string
 	CallerFile string
-	CallerLine string
+	CallerLine int
 	Code       int
 	Message    string
 }

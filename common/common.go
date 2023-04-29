@@ -6,31 +6,9 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"path"
 	"reflect"
-	"runtime"
 	"strings"
-
-	"github.com/mattwiater/golangchannels/structs"
 )
-
-func GetCallerInfo(skip int) structs.Error {
-	var e = structs.Error{}
-
-	pc, file, lineNo, ok := runtime.Caller(skip)
-	if !ok {
-		return e
-	}
-
-	funcName := path.Base(runtime.FuncForPC(pc).Name())
-	fileName := file
-
-	e.CallerName = fmt.Sprintf("%s", funcName)
-	e.CallerFile = fmt.Sprintf("%s", fileName)
-	e.CallerLine = fmt.Sprintf("%d", lineNo)
-
-	return e
-}
 
 // Get console column width of submitted string
 func ConsoleColumnWidth(text string, finalColWidth int) int {
