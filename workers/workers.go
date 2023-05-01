@@ -3,7 +3,9 @@ package workers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"sync"
 	"time"
@@ -11,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattwiater/golangchannels/common"
 	"github.com/mattwiater/golangchannels/config"
+	"github.com/mattwiater/golangchannels/errorHandler"
 
 	"github.com/mattwiater/golangchannels/jobs/emptySleepJob"
 	"github.com/mattwiater/golangchannels/jobs/ioJob"
@@ -83,7 +86,7 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64, f
 	for _, jobResult := range allJobResults[(len(allJobResults) - numberOfJobs):] {
 		jobTime, err := common.GetAttr(&jobResult, "JobTimer")
 		if err != nil {
-			fmt.Println(err.Error())
+			errorHandler.New(errors.New(err.Error()))
 		}
 
 		jobTimeFloat := jobTime.Interface().(float64)
@@ -91,7 +94,7 @@ func Workers(jobName string, workerCount int, jobCount int) (float64, float64, f
 
 		memAlloc, err := common.GetAttr(&jobResult, "JobMemAlloc")
 		if err != nil {
-			fmt.Println(err.Error())
+			errorHandler.New(errors.New(err.Error()))
 		}
 		memAllocFloat := memAlloc.Interface().(float32)
 		memAllocSum += memAllocFloat
@@ -202,7 +205,8 @@ func WorkerResult(workerResultsChannel chan []structs.JobResult) {
 		jobResultMap := map[string]string{}
 		err := json.Unmarshal([]byte(jobResult.Status), &jobResultMap)
 		if err != nil {
-			panic("Could not Unmarshal object")
+			errorHandler.New(errors.New(err.Error()))
+			log.Fatal("Exiting")
 		}
 
 		JobResults = append(JobResults, jobResult)
@@ -233,6 +237,8 @@ func jobRouter(jobName string, job structs.Job) (string, float64) {
 		result, jobTimer := myJob.IoJob()
 		return result, jobTimer
 	default:
-		panic("Unknown function name: " + jobName)
+		errorHandler.New(errors.New("Unknown job name: " + jobName))
+		log.Fatal("Exiting")
+		return "", 0
 	}
 }

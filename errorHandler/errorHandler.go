@@ -4,36 +4,32 @@ package errorHandler
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"path"
 	"runtime"
 
 	"github.com/mattwiater/golangchannels/structs"
 )
 
-func New(errorObj error, prettyPrint bool) structs.Error {
-	e := getCallerInfo(1, errorObj)
-
-	fmt.Println("e", e)
-
-	if prettyPrint {
-		pretty(e)
-	} else {
-		fmt.Println(e.Message)
-	}
-
-	return e
+func New(errorObj error) error {
+	e := getCallerInfo(2, errorObj)
+	err := fmt.Errorf("Error [%d]: %s (Function: %s, File: %s#%d)", e.Code, e.Message, e.CallerName, e.CallerFile, e.CallerLine)
+	// FIX
+	//if config.PrettyPrintErrors {
+	//	config.ConsoleRed.Println("Error:")
+	fmt.Println("Error:")
+	pretty(e)
+	//} else {
+	//	fmt.Println(err)
+	//}
+	return err
 }
 
 func pretty(errorObj structs.Error) {
 	errorJSON, err := json.MarshalIndent(errorObj, "", "  ")
 	if err != nil {
 		fmt.Println(err.Error())
-		os.Exit(1)
 	}
-
 	fmt.Println(string(errorJSON))
-	os.Exit(1)
 }
 
 func getCallerInfo(skip int, err error) structs.Error {

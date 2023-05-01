@@ -3,13 +3,14 @@ package piJob
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"math"
 	"math/big"
 	"strconv"
 	"time"
 
 	"github.com/mattwiater/golangchannels/config"
+	"github.com/mattwiater/golangchannels/errorHandler"
 	"github.com/mattwiater/golangchannels/structs"
 )
 
@@ -31,7 +32,7 @@ func (job Job) PiJob() (string, float64) {
 
 	jobResultString, err := json.Marshal(jobResult)
 	if err != nil {
-		fmt.Println(err)
+		errorHandler.New(errors.New(err.Error()))
 	}
 
 	return string(jobResultString), jobElapsed.Seconds()

@@ -17,10 +17,12 @@ var EmptySleepJobSleepTimeMs = 1000
 var ConsoleGreen = color.New(color.FgGreen)
 var ConsoleCyan = color.New(color.FgCyan)
 var ConsoleWhite = color.New(color.FgWhite)
+var ConsoleRed = color.New(color.FgRed)
 
 var EnvVarsFile embed.FS
 
 var Debug bool
+var PrettyPrintErrors bool
 var JobName string
 var StartingWorkerCount int
 var MaxWorkerCount int
@@ -40,6 +42,14 @@ func AppConfig() (map[string]string, error) {
 				Debug = false
 			} else {
 				Debug, _ = strconv.ParseBool(keyValuePair[1])
+			}
+		}
+
+		if keyValuePair[0] == "PRETTYPRINTERRORS" {
+			if keyValuePair[1] == "" {
+				PrettyPrintErrors = false
+			} else {
+				PrettyPrintErrors, _ = strconv.ParseBool(keyValuePair[1])
 			}
 		}
 

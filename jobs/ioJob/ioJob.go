@@ -3,12 +3,14 @@ package ioJob
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"log"
 	"os"
 	"strconv"
 	"time"
 
 	"github.com/mattwiater/golangchannels/config"
+	"github.com/mattwiater/golangchannels/errorHandler"
 	"github.com/mattwiater/golangchannels/structs"
 )
 
@@ -20,12 +22,14 @@ func (job Job) IoJob() (string, float64) {
 	for n := 0; n < iterations; n++ {
 		f, err := os.Create("/tmp/test.txt")
 		if err != nil {
-			panic(err)
+			errorHandler.New(errors.New(err.Error()))
+			log.Fatal("Exiting")
 		}
 		for i := 0; i < 100000; i++ {
 			_, err := f.WriteString("some text!\n")
 			if err != nil {
-				panic(err)
+				errorHandler.New(errors.New(err.Error()))
+				log.Fatal("Exiting")
 			}
 		}
 		f.Close()
@@ -41,7 +45,7 @@ func (job Job) IoJob() (string, float64) {
 
 	jobResultString, err := json.Marshal(jobResult)
 	if err != nil {
-		fmt.Println(err)
+		errorHandler.New(errors.New(err.Error()))
 	}
 
 	return string(jobResultString), jobElapsed.Seconds()

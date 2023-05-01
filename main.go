@@ -2,15 +2,18 @@ package main
 
 import (
 	"embed"
+	"errors"
 	"fmt"
 	"log"
 	"math"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 
 	"github.com/mattwiater/golangchannels/config"
 	"github.com/mattwiater/golangchannels/dispatcher"
+	"github.com/mattwiater/golangchannels/errorHandler"
 	"github.com/mattwiater/golangchannels/workers"
 	"github.com/olekukonko/tablewriter"
 )
@@ -23,8 +26,18 @@ func main() {
 
 	_, err := config.AppConfig()
 	if err != nil {
-		log.Fatal("Error: config.AppConfig()")
+		errorHandler.New(errors.New(err.Error()))
+		log.Fatal("Exiting")
 	}
+
+	opsys := runtime.GOOS
+	fmt.Println(opsys)
+	fmt.Println(runtime.NumCPU())
+	fmt.Println(config.JobName)
+	fmt.Println(config.StartingWorkerCount)
+	fmt.Println(config.MaxWorkerCount)
+	fmt.Println(config.TotalJobCount)
+	os.Exit(1)
 
 	jobName := config.JobName
 

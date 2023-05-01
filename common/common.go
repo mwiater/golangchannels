@@ -4,10 +4,13 @@ package common
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"reflect"
 	"strings"
+
+	"github.com/mattwiater/golangchannels/errorHandler"
 )
 
 // Get console column width of submitted string
@@ -42,7 +45,8 @@ func CalculateMemory() (float32, error) {
 	process_id := os.Getpid()
 	f, err := os.Open(fmt.Sprintf("/proc/%d/smaps", process_id))
 	if err != nil {
-		return 0, err
+		error := errorHandler.New(errors.New(err.Error()))
+		return 0, error
 	}
 	defer f.Close()
 
@@ -55,13 +59,15 @@ func CalculateMemory() (float32, error) {
 			var size uint64
 			_, err := fmt.Sscanf(string(line[4:]), "%d", &size)
 			if err != nil {
-				return 0, err
+				error := errorHandler.New(errors.New(err.Error()))
+				return 0, error
 			}
 			memoryBytes += size
 		}
 	}
 	if err := r.Err(); err != nil {
-		return 0, err
+		error := errorHandler.New(errors.New(err.Error()))
+		return 0, error
 	}
 
 	memoryMB := BToMb(float32(memoryBytes))
