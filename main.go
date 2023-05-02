@@ -8,7 +8,6 @@ import (
 	"math"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 
 	"github.com/mattwiater/golangchannels/config"
@@ -29,15 +28,6 @@ func main() {
 		errorHandler.New(errors.New(err.Error()))
 		log.Fatal("Exiting")
 	}
-
-	opsys := runtime.GOOS
-	fmt.Println(opsys)
-	fmt.Println(runtime.NumCPU())
-	fmt.Println(config.JobName)
-	fmt.Println(config.StartingWorkerCount)
-	fmt.Println(config.MaxWorkerCount)
-	fmt.Println(config.TotalJobCount)
-	os.Exit(1)
 
 	jobName := config.JobName
 

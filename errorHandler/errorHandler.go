@@ -15,8 +15,7 @@ func New(errorObj error) error {
 	err := fmt.Errorf("Error [%d]: %s (Function: %s, File: %s#%d)", e.Code, e.Message, e.CallerName, e.CallerFile, e.CallerLine)
 	// FIX
 	//if config.PrettyPrintErrors {
-	//	config.ConsoleRed.Println("Error:")
-	fmt.Println("Error:")
+	//	fmt.Println("Error:")
 	pretty(e)
 	//} else {
 	//	fmt.Println(err)
