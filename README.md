@@ -2,7 +2,7 @@
 
 ## Reference Article
 
-**See my accompanying article on Medium here:** https://medium.com/@matt.wiater/golang-channels-goroutines-and-optimal-concurrency-demystifying-through-examples-a43ba6aee74f
+**See my accompanying article on Level Up Coding here:** https://levelup.gitconnected.com/golang-channels-goroutines-and-optimal-concurrency-demystifying-through-examples-a43ba6aee74f
 
 ## To Do
 
